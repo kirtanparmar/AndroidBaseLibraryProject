@@ -1,8 +1,8 @@
-package com.kirtan.mylibraryproject.apis.responseModels.userResponse
+package com.kirtan.mylibraryproject.apis.responseModels.userListResponse
 
 import com.google.gson.annotations.SerializedName
 
-data class UserResponse(
+data class UserListResponse(
     @SerializedName("data")
     var users: ArrayList<User> = ArrayList(),
     @SerializedName("total")

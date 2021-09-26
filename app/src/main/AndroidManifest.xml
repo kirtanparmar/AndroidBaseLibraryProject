@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyLibraryProject">
         <activity
+            android:name=".ui.userInfo.UserInfoActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.userList.UserListActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyLibraryProject.NoActionBar">

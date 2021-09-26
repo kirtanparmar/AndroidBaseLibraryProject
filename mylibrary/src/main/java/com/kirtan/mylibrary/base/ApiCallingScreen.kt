@@ -1,6 +1,9 @@
 package com.kirtan.mylibrary.base
 
+import android.view.View
+import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kirtan.mylibrary.base.viewModels.ApiViewModel
 import retrofit2.Response
 
@@ -25,4 +28,19 @@ interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
      * Observe the response which will be the type of #ApiResponse
      */
     fun observeApiResponse(apiResponse: LiveData<ApiResponse>)
+
+    /**
+     * @return should be the center aligned progressBar if you are using else can be null.
+     */
+    fun getCenterProgressBar(): ProgressBar?
+
+    /**
+     * @return should be the swipe refresh layout else can be null.
+     */
+    fun getSwipeRefreshLayout(): SwipeRefreshLayout?
+
+    /**
+     * @return this view should be containing all the views in it except the center aligned progressBar.
+     */
+    fun getBody(): View?
 }

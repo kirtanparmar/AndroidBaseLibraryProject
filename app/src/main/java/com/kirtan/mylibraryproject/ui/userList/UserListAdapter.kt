@@ -2,7 +2,7 @@ package com.kirtan.mylibraryproject.ui.userList
 
 import com.kirtan.mylibrary.base.BaseAdapter
 import com.kirtan.mylibraryproject.R
-import com.kirtan.mylibraryproject.apis.responseModels.userResponse.User
+import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User
 import com.kirtan.mylibraryproject.databinding.ItemHomeListBinding
 
 class UserListAdapter(private val callback: (model: User) -> Unit) :

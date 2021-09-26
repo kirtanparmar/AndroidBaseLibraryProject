@@ -1,4 +1,4 @@
-package com.kirtan.mylibraryproject.apis.responseModels.userResponse
+package com.kirtan.mylibraryproject.apis.responseModels.userListResponse
 
 import androidx.recyclerview.widget.DiffUtil
 import com.google.gson.annotations.SerializedName

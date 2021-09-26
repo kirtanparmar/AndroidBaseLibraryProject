@@ -6,6 +6,8 @@ import androidx.databinding.ViewDataBinding
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiCallingScreen
 import com.kirtan.mylibrary.base.viewModels.ApiViewModel
+import com.kirtan.mylibrary.utils.gone
+import com.kirtan.mylibrary.utils.show
 import com.kirtan.mylibrary.utils.toast
 
 /**
@@ -23,6 +25,7 @@ abstract class MyAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiRes
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getSwipeRefreshLayout()?.setOnRefreshListener { loadAPIData() }
         loadAPIData()
         observeApiResponse(apiViewModel.getResponseData())
     }
@@ -31,7 +34,9 @@ abstract class MyAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiRes
      * This function loads the data through the api.
      */
     private fun loadAPIData() {
+        showPageProgress()
         getApiCallingFunction(getApiRequest()).observe(this) { response ->
+            gonePageProgress()
             if (response == null) {
                 toast(getString(R.string.server_unreachable))
                 return@observe
@@ -43,5 +48,24 @@ abstract class MyAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiRes
                 toast(response.message())
             }
         }
+    }
+
+    /**
+     * Function will display the loader according the need.
+     */
+    private fun showPageProgress() {
+        getBody()?.gone()
+        if (getSwipeRefreshLayout()?.isRefreshing == true) return
+        getCenterProgressBar()?.show()
+    }
+
+    /**
+     * Function will hide the loader according the need.
+     */
+    private fun gonePageProgress() {
+        if (getSwipeRefreshLayout()?.isRefreshing == true)
+            getSwipeRefreshLayout()?.isRefreshing = false
+        else getCenterProgressBar()?.gone()
+        getBody()?.show()
     }
 }
