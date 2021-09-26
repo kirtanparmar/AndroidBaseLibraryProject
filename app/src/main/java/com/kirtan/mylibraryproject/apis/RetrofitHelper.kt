@@ -47,6 +47,7 @@ object RetrofitHelper {
 
                     val request = original.newBuilder()
                         .method(original.method, original.body)
+                        .header("app-id", "YourAppId")
                         .build()
 
                     val response: Response
