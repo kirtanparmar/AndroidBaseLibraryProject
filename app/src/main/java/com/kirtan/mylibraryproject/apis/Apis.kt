@@ -1,5 +1,7 @@
 package com.kirtan.mylibraryproject.apis
 
+import com.kirtan.mylibraryproject.apis.responseModels.userResponse.UserResponse
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -10,5 +12,8 @@ interface Apis {
     }
 
     @GET("user")
-    suspend fun getUsers(@Header("app-id") appId: String = <YouAppID>, @Query("page") page: Int): Response<UserResponse>?
+    suspend fun getUsers(
+        @Header("app-id") appId: String = "615010c3651c026fc4a728b4",
+        @Query("page") page: Int
+    ): Response<UserResponse>?
 }
