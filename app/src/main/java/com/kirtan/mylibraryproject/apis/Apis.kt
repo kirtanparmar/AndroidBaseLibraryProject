@@ -13,7 +13,7 @@ interface Apis {
 
     @GET("user")
     suspend fun getUsers(
-        @Header("app-id") appId: String = "615010c3651c026fc4a728b4",
+        @Header("app-id") appId: String = "YourAppId",
         @Query("page") page: Int
     ): Response<UserResponse>?
 }
