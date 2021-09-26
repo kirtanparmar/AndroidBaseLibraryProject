@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.kirtan.mylibraryproject.apis.responseModels.userResponse.User" />
+    </data>
+
+    <com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_5sdp"
+        android:background="@drawable/home_list_item_bg"
+        android:foreground="?android:selectableItemBackgroundBorderless"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:paddingVertical="@dimen/_7sdp"
+        android:text="@{model.firstName + ` ` + model.lastName}"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14ssp"
+        tools:text="Sample Text" />
+
+</layout>
