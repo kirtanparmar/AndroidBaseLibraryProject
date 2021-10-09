@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ListScreen
 import com.kirtan.mylibrary.base.dataHolder.BaseArrayList
-import com.kirtan.mylibrary.base.dataHolder.Object
+import com.kirtan.mylibrary.base.dataHolder.BaseObject
 import com.kirtan.mylibrary.base.dataHolder.Operation
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.show
 
-abstract class MyListActivity<Screen : ViewDataBinding, ModelType : Object> : MyActivity<Screen>(),
+abstract class MyListActivity<Screen : ViewDataBinding, ModelType : BaseObject> :
+    MyActivity<Screen>(),
     ListScreen<ModelType> {
     /**
      * Layout manager object. You've to override the value as you wish.

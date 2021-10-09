@@ -2,7 +2,7 @@ package com.kirtan.mylibrary.base.dataHolder
 
 import timber.log.Timber
 
-abstract class BaseArrayList<T : Object> : ArrayList<T>() {
+abstract class BaseArrayList<T : BaseObject> : ArrayList<T>() {
     override fun clear() = clear {}
 
     fun clear(callBack: (operation: Operation) -> Unit) {

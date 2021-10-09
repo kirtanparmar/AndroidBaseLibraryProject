@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.activity.MyListActivity
-import com.kirtan.mylibrary.base.dataHolder.Object
+import com.kirtan.mylibrary.base.dataHolder.BaseObject
 import com.kirtan.mylibrary.base.viewModels.ApiViewModel
 import com.kirtan.mylibrary.utils.parsedResponseForList.ListParsedResponse
 import com.kirtan.mylibrary.utils.toast
@@ -16,7 +16,7 @@ import timber.log.Timber
 /**
  * Extend this class when you want to use the listing with api in your activity.
  */
-abstract class MyApiListActivity<Screen : ViewDataBinding, ModelType : Object, ApiRequestType : Any?, ApiResponseType> :
+abstract class MyApiListActivity<Screen : ViewDataBinding, ModelType : BaseObject, ApiRequestType : Any?, ApiResponseType> :
     MyListActivity<Screen, ModelType>(),
     ApiListCallingScreen<ApiRequestType, ApiResponseType, ListParsedResponse<ModelType>> {
     /**
