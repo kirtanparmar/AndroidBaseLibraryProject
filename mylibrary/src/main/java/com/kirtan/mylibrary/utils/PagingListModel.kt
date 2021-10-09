@@ -1,3 +1,5 @@
 package com.kirtan.mylibrary.utils
 
-open class PagingListModel(var isLoaderModel: Boolean = false)
+import com.kirtan.mylibrary.base.dataHolder.Object
+
+open class PagingListModel(var isLoaderModel: Boolean = false) : Object()

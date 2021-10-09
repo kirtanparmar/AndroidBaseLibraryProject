@@ -6,51 +6,65 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ListScreen
-import com.kirtan.mylibrary.base.MyArrayList
+import com.kirtan.mylibrary.base.dataHolder.BaseArrayList
+import com.kirtan.mylibrary.base.dataHolder.Object
+import com.kirtan.mylibrary.base.dataHolder.Operation
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.show
 
-abstract class MyListActivity<Screen : ViewDataBinding, ModelType> : MyActivity<Screen>(),
+abstract class MyListActivity<Screen : ViewDataBinding, ModelType : Object> : MyActivity<Screen>(),
     ListScreen<ModelType> {
     /**
      * Layout manager object. You've to override the value as you wish.
      * #Note Only LinearLayoutManager object can be used for paging.
      */
     abstract val layoutManager: RecyclerView.LayoutManager
+    abstract val emptyObjectForNullAssertion: ModelType
 
     /**
      * This list contains the callbacks for the many functions in the arraylist.
      */
-    protected val models = object : MyArrayList<ModelType>() {
-        override fun newItemAdded(callBack: () -> Unit) {
-            adapter.notifyItemInserted(size - 1)
-            getErrorTextView()?.gone()
-            callBack.invoke()
-        }
-
-        override fun listCleared(lastListSize: Int, callBack: () -> Unit) {
+    protected val models = object : BaseArrayList<ModelType>() {
+        override fun listCleared(lastListSize: Int, callBack: (operation: Operation) -> Unit) {
             adapter.notifyItemRangeRemoved(0, lastListSize)
+            callBack.invoke(Operation())
         }
 
-        override fun emptyListAdded(callBack: () -> Unit) {
-            checkEmpty(callBack)
-        }
+        override fun emptyListAdded(callBack: (operation: Operation) -> Unit) = checkEmpty(callBack)
 
-        override fun itemRemovedAt(position: Int, callBack: () -> Unit) {
+        override fun itemRemovedAt(position: Int, callBack: (operation: Operation) -> Unit) {
             adapter.notifyItemRemoved(position)
             checkEmpty(callBack)
         }
 
-        override fun itemRemovedUnknownPosition(callBack: () -> Unit) {
+        override fun itemRemovedUnknownPosition(callBack: (operation: Operation) -> Unit) {
             checkEmpty(callBack)
         }
 
-        fun checkEmpty(callBack: () -> Unit) {
+        fun checkEmpty(callBack: (operation: Operation) -> Unit) {
             if (isEmpty()) {
                 showErrorOnDisplay(getString(R.string.no_data_found))
             }
-            callBack.invoke()
+            callBack.invoke(Operation())
         }
+
+        override fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit) {
+            adapter.notifyItemInserted(position)
+            getErrorTextView()?.gone()
+            callBack.invoke(Operation())
+        }
+
+        override fun newItemRangeAdded(
+            start: Int,
+            end: Int,
+            callBack: (operation: Operation) -> Unit
+        ) {
+            adapter.notifyItemRangeInserted(start, end)
+            getErrorTextView()?.gone()
+            callBack.invoke(Operation())
+        }
+
+        override fun emptyObjectForNullAssertion(): ModelType = emptyObjectForNullAssertion
     }
 
     /**
