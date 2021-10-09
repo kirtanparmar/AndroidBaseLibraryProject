@@ -1,4 +1,4 @@
-# MyAndroidLibraryProject
+# AndroidBaseLibraryProject
 
 You can use the Android Library for faster development.
 In order to use this library, you must have advance knowledge in android and kotlin.
