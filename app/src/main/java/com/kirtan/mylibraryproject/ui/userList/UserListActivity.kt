@@ -54,7 +54,7 @@ class UserListActivity :
     override fun createAdapter(): ListAdapter<User, *> =
         UserListAdapter() { model ->
             startActivity(Intent(this@UserListActivity, UserInfoActivity::class.java).also {
-                it.putExtras(Bundle().also { bundle -> bundle.putString("id", model.id) })
+                it.putExtras(Bundle().apply { putParcelable("user", model) })
             })
         }
 

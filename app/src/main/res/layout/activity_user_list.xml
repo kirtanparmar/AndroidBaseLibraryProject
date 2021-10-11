@@ -24,8 +24,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_20sdp"
                     android:gravity="center_vertical"
-                    android:text="@string/home"
-                    android:textColor="@color/black"
+                    android:text="@string/users"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_25ssp" />
 
             </com.google.android.material.appbar.MaterialToolbar>

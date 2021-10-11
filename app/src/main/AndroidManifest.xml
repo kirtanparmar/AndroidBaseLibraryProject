@@ -16,11 +16,11 @@
             android:name=".ui.userInfo.UserInfoActivity"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyLibraryProject.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.userList.UserListActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyLibraryProject.NoActionBar"
             tools:ignore="LockedOrientationActivity">
