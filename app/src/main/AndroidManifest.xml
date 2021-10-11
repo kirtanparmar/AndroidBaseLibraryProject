@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.kirtan.mylibraryproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,11 +14,16 @@
         android:theme="@style/Theme.MyLibraryProject">
         <activity
             android:name=".ui.userInfo.UserInfoActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.userList.UserListActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MyLibraryProject.NoActionBar">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyLibraryProject.NoActionBar"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
