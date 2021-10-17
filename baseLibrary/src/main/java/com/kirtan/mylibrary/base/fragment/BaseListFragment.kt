@@ -55,9 +55,6 @@ abstract class BaseListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject
             checkEmpty(callBack)
         }
 
-        override fun itemRemovedUnknownPosition(callBack: (operation: Operation) -> Unit) =
-            checkEmpty(callBack)
-
         override fun emptyObjectForNullAssertion(): ModelType = emptyObjectForNullAssertion
 
         fun checkEmpty(callBack: (operation: Operation) -> Unit) {
@@ -65,6 +62,13 @@ abstract class BaseListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject
                 showErrorOnDisplay(getString(R.string.no_data_found))
             }
             callBack.invoke(Operation())
+        }
+
+        override fun itemRemovedUnknownPosition(
+            element: ModelType,
+            callBack: (operation: Operation) -> Unit
+        ) {
+            checkEmpty(callBack)
         }
     }
 

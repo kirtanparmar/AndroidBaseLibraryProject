@@ -2,7 +2,7 @@ package com.kirtan.mylibrary.base.dataHolder
 
 import timber.log.Timber
 
-abstract class BaseArrayList<T : BaseObject> : ArrayList<T>() {
+abstract class BaseArrayList<T : BaseObject> : ArrayList<T>(), OnArrayListOperations<T> {
     override fun clear() = clear {}
 
     fun clear(callBack: (operation: Operation) -> Unit) {
@@ -39,7 +39,7 @@ abstract class BaseArrayList<T : BaseObject> : ArrayList<T>() {
             if (super.addAll(index, elements)) {
                 newItemRangeAdded(
                     index,
-                    index + elements.size - 1
+                    index + elements.size
                 )
                 true
             } else {
@@ -100,7 +100,7 @@ abstract class BaseArrayList<T : BaseObject> : ArrayList<T>() {
             true
         } else try {
             return if (super.remove(element)) {
-                itemRemovedUnknownPosition(callBack)
+                itemRemovedUnknownPosition(element, callBack)
                 true
             } else {
                 "Failed to remove the element $element from list".operateOnFail(callBack)
@@ -122,19 +122,6 @@ abstract class BaseArrayList<T : BaseObject> : ArrayList<T>() {
             emptyObjectForNullAssertion().apply { nullObject = true }
         }
     }
-
-    abstract fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit = {})
-    abstract fun newItemRangeAdded(
-        start: Int,
-        end: Int,
-        callBack: (operation: Operation) -> Unit = {}
-    )
-
-    abstract fun listCleared(lastListSize: Int, callBack: (operation: Operation) -> Unit = {})
-    abstract fun emptyListAdded(callBack: (operation: Operation) -> Unit = {})
-    abstract fun itemRemovedAt(position: Int, callBack: (operation: Operation) -> Unit = {})
-    abstract fun itemRemovedUnknownPosition(callBack: (operation: Operation) -> Unit = {})
-    abstract fun emptyObjectForNullAssertion(): T
 
     private fun Exception.operateOnError(callBack: (operation: Operation) -> Unit) {
         printStackTrace()

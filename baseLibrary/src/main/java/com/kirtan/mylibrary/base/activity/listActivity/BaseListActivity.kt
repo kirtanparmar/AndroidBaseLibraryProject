@@ -1,20 +1,30 @@
-package com.kirtan.mylibrary.base.activity
+package com.kirtan.mylibrary.base.activity.listActivity
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ListScreen
+import com.kirtan.mylibrary.base.activity.BaseActivity
 import com.kirtan.mylibrary.base.dataHolder.BaseArrayList
 import com.kirtan.mylibrary.base.dataHolder.BaseObject
 import com.kirtan.mylibrary.base.dataHolder.Operation
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.show
+import com.kirtan.mylibrary.utils.toast
 
 abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject> :
-    BaseActivity<Screen>(),
-    ListScreen<ModelType> {
+    BaseActivity<Screen>(), ListScreen<ModelType> {
+    private val listViewModel: ListViewModel<ModelType> by viewModels()
+    private val viewModelList get() = listViewModel.models
+    private var copyToViewModelList: Boolean
+        get() = listViewModel.copyToViewModelList
+        set(value) {
+            listViewModel.copyToViewModelList = value
+        }
+
     /**
      * Layout manager object. You've to override the value as you wish.
      * #Note Only LinearLayoutManager object can be used for paging.
@@ -27,6 +37,9 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      */
     protected val models = object : BaseArrayList<ModelType>() {
         override fun listCleared(lastListSize: Int, callBack: (operation: Operation) -> Unit) {
+            if (copyToViewModelList) {
+                viewModelList.clear()
+            }
             adapter.notifyItemRangeRemoved(0, lastListSize)
             callBack.invoke(Operation())
         }
@@ -34,22 +47,36 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
         override fun emptyListAdded(callBack: (operation: Operation) -> Unit) = checkEmpty(callBack)
 
         override fun itemRemovedAt(position: Int, callBack: (operation: Operation) -> Unit) {
+            if (copyToViewModelList) {
+                viewModelList.removeAt(position)
+            }
             adapter.notifyItemRemoved(position)
             checkEmpty(callBack)
         }
 
-        override fun itemRemovedUnknownPosition(callBack: (operation: Operation) -> Unit) {
+        override fun itemRemovedUnknownPosition(
+            element: ModelType,
+            callBack: (operation: Operation) -> Unit
+        ) {
+            if (copyToViewModelList) {
+                viewModelList.remove(element)
+            }
             checkEmpty(callBack)
         }
 
         fun checkEmpty(callBack: (operation: Operation) -> Unit) {
-            if (isEmpty()) {
-                showErrorOnDisplay(getString(R.string.no_data_found))
+            if (copyToViewModelList) {
+                if (isEmpty()) {
+                    showErrorOnDisplay(getString(R.string.no_data_found))
+                }
             }
             callBack.invoke(Operation())
         }
 
         override fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit) {
+            if (copyToViewModelList) {
+                viewModelList.add(position, get(position))
+            }
             adapter.notifyItemInserted(position)
             getErrorTextView()?.gone()
             callBack.invoke(Operation())
@@ -60,6 +87,12 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
             end: Int,
             callBack: (operation: Operation) -> Unit
         ) {
+            if (copyToViewModelList) {
+                viewModelList.addAll(
+                    start,
+                    subList(fromIndex = start, toIndex = end)
+                )
+            }
             adapter.notifyItemRangeInserted(start, end)
             getErrorTextView()?.gone()
             callBack.invoke(Operation())
@@ -89,6 +122,10 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
     private fun setRv() {
         getRecyclerView().layoutManager = layoutManager
         getRecyclerView().adapter = adapter
+        copyToViewModelList = false
+        models.clear()
+        models.addAll(viewModelList)
+        copyToViewModelList = true
         adapter.submitList(models)
     }
 
@@ -113,7 +150,8 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      */
     protected open fun showErrorOnDisplay(text: String) {
         if (text.isBlank()) return
-        getErrorTextView()?.apply {
+        if (getErrorTextView() == null) toast(text)
+        else getErrorTextView()?.apply {
             setText(text)
             show()
         }

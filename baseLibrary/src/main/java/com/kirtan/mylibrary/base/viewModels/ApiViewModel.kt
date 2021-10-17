@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class ApiViewModel<ApiResponseType> : ViewModel() {
+    var status: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.INITIATE)
     private val responseData: MutableLiveData<ApiResponseType> = MutableLiveData()
 
     fun getResponseData(): LiveData<ApiResponseType> = responseData
@@ -12,4 +13,6 @@ class ApiViewModel<ApiResponseType> : ViewModel() {
     fun setResponseData(responseData: ApiResponseType) {
         this.responseData.value = responseData
     }
+
+    enum class ApiStatus { INITIATE, LOADED, LOADING }
 }

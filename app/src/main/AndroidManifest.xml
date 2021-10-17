@@ -21,9 +21,7 @@
         <activity
             android:name=".ui.userList.UserListActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.MyLibraryProject.NoActionBar"
-            tools:ignore="LockedOrientationActivity">
+            android:theme="@style/Theme.MyLibraryProject.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

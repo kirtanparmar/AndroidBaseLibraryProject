@@ -15,6 +15,9 @@ interface Apis {
     @GET("user")
     suspend fun getUsers(@Query("page") page: Int): Response<UserListResponse>?
 
+    @GET("user")
+    suspend fun getUsers(): Response<UserListResponse>?
+
     @GET("user/{id}")
     suspend fun getUserInfo(@Path("id") id: String): Response<UserInfoResponse>?
 }

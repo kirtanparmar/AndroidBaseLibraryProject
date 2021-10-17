@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
-import com.kirtan.mylibrary.base.activity.apiList.BaseApiListActivity
-import com.kirtan.mylibrary.utils.parsedResponseForList.ListParsedResponse
+import com.kirtan.mylibrary.base.activity.apiPagingList.BaseApiListPagingListActivity
+import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.apis.Apis
 import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User
@@ -22,8 +22,9 @@ import com.kirtan.mylibraryproject.ui.userInfo.UserInfoActivity
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
-class UserListActivity :
-    BaseApiListActivity<ActivityUserListBinding, User, Int, UserListResponse>() {
+class UserListPagingActivity :
+    BaseApiListPagingListActivity<ActivityUserListBinding, User, Int, UserListResponse>() {
+    override fun getFirstPagePosition(): Int = 0
     override fun getRecyclerView(): RecyclerView = screen.rv
     override fun getCenterProgressBar(): ProgressBar = screen.centerProgress
     override fun getErrorTextView(): MaterialTextView = screen.errorMsg
@@ -33,33 +34,35 @@ class UserListActivity :
 
     override fun getApiCallingFunction(apiRequest: Int): LiveData<Response<UserListResponse>?> =
         liveData(Dispatchers.IO) {
-            val apiCalling = Apis.getInstance().getUsers()
+            val apiCalling = Apis.getInstance().getUsers(page = apiRequest)
             emit(apiCalling)
         }
 
 
-    override fun parseListFromResponse(response: UserListResponse): LiveData<ListParsedResponse<User>> =
+    override fun parseListFromResponse(response: UserListResponse): LiveData<PageListParsedResponse<User>> =
         liveData(Dispatchers.Default) {
             if (response.users.isNotEmpty()) emit(
-                ListParsedResponse(
+                PageListParsedResponse(
                     isSuccess = true,
-                    apiListData = response.users
+                    newTotalItemCount = response.total,
+                    newPageData = response.users
                 )
             )
-            else emit(ListParsedResponse(false, "$response"))
+            else emit(PageListParsedResponse<User>(false, "$response"))
         }
 
     override fun createAdapter(): ListAdapter<User, *> =
         UserListAdapter() { model ->
-            startActivity(Intent(this@UserListActivity, UserInfoActivity::class.java).also {
+            startActivity(Intent(this@UserListPagingActivity, UserInfoActivity::class.java).also {
                 it.putExtras(Bundle().apply { putParcelable("user", model) })
             })
         }
 
+    override fun getLoaderDataModel(): User =
+        User().also { it.isLoaderModel = true }
+
+    override fun getApiRequest(): Int = getPage()
     override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
     override fun getBody(): View? = null
     override val emptyObjectForNullAssertion: User = User()
-    override fun getApiRequest(): Int {
-        return 0
-    }
 }

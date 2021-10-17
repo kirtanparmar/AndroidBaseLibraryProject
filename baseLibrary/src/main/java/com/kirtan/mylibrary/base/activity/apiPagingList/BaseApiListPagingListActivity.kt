@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.ListPagingScreen
-import com.kirtan.mylibrary.base.activity.BaseListActivity
+import com.kirtan.mylibrary.base.activity.listActivity.BaseListActivity
 import com.kirtan.mylibrary.base.viewModels.ApiViewModel
 import com.kirtan.mylibrary.utils.PagingListModel
 import com.kirtan.mylibrary.utils.gone
