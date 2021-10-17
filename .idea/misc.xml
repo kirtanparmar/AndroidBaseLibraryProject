@@ -4,11 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/activity_main.xml" value="0.26296296296296295" />
-        <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/activity_user_info.xml" value="0.29259259259259257" />
-        <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/activity_user_list.xml" value="0.26296296296296295" />
+        <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/activity_user_info.xml" value="0.19166666666666668" />
+        <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/activity_user_list.xml" value="0.19166666666666668" />
         <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/fragment_blank.xml" value="0.2796296296296296" />
         <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/item_favourite_list.xml" value="0.1" />
-        <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/item_home_list.xml" value="0.26296296296296295" />
+        <entry key="..\:/AndroidKirtan/myLibraryProject/app/src/main/res/layout/item_home_list.xml" value="0.2398609501738123" />
       </map>
     </option>
   </component>

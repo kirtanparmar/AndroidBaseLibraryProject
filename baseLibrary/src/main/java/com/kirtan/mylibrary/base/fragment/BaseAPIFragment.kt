@@ -9,8 +9,8 @@ import com.kirtan.mylibrary.base.ApiCallingScreen
 import com.kirtan.mylibrary.base.viewModels.ApiViewModel
 import com.kirtan.mylibrary.utils.toast
 
-abstract class MyAPIFragment<Screen : ViewDataBinding, ApiRequestType : Any?, ApiResponseType> :
-    MyFragment<Screen>(), ApiCallingScreen<ApiRequestType, ApiResponseType> {
+abstract class BaseAPIFragment<Screen : ViewDataBinding, ApiRequestType : Any?, ApiResponseType> :
+    BaseFragment<Screen>(), ApiCallingScreen<ApiRequestType, ApiResponseType> {
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */

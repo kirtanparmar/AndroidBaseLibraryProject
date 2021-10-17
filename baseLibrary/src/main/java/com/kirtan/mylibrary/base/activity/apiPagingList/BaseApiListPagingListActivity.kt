@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.ListPagingScreen
-import com.kirtan.mylibrary.base.activity.MyListActivity
+import com.kirtan.mylibrary.base.activity.BaseListActivity
 import com.kirtan.mylibrary.base.viewModels.ApiViewModel
 import com.kirtan.mylibrary.utils.PagingListModel
 import com.kirtan.mylibrary.utils.gone
@@ -17,8 +17,8 @@ import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
 import com.kirtan.mylibrary.utils.toast
 import timber.log.Timber
 
-abstract class MyApiListPagingListActivity<Screen : ViewDataBinding, ModelType : PagingListModel, ApiRequestType : Any?, ApiResponseType> :
-    MyListActivity<Screen, ModelType>(),
+abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType : PagingListModel, ApiRequestType : Any?, ApiResponseType> :
+    BaseListActivity<Screen, ModelType>(),
     ListPagingScreen<ModelType>,
     ApiListCallingScreen<ApiRequestType, ApiResponseType, PageListParsedResponse<ModelType>> {
     /**

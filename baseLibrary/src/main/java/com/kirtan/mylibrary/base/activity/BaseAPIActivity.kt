@@ -13,8 +13,8 @@ import com.kirtan.mylibrary.utils.toast
 /**
  * This class should be used when you need to call the apis in your activity.
  */
-abstract class MyAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
-    MyActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
+abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
+    BaseActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */

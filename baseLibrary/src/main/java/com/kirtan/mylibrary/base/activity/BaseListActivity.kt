@@ -1,7 +1,6 @@
-package com.kirtan.mylibrary.base.fragment
+package com.kirtan.mylibrary.base.activity
 
 import android.os.Bundle
-import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,8 +12,8 @@ import com.kirtan.mylibrary.base.dataHolder.Operation
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.show
 
-abstract class MyListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject> :
-    MyFragment<SCREEN>(),
+abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject> :
+    BaseActivity<Screen>(),
     ListScreen<ModelType> {
     /**
      * Layout manager object. You've to override the value as you wish.
@@ -27,8 +26,31 @@ abstract class MyListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject> 
      * This list contains the callbacks for the many functions in the arraylist.
      */
     protected val models = object : BaseArrayList<ModelType>() {
+        override fun listCleared(lastListSize: Int, callBack: (operation: Operation) -> Unit) {
+            adapter.notifyItemRangeRemoved(0, lastListSize)
+            callBack.invoke(Operation())
+        }
+
+        override fun emptyListAdded(callBack: (operation: Operation) -> Unit) = checkEmpty(callBack)
+
+        override fun itemRemovedAt(position: Int, callBack: (operation: Operation) -> Unit) {
+            adapter.notifyItemRemoved(position)
+            checkEmpty(callBack)
+        }
+
+        override fun itemRemovedUnknownPosition(callBack: (operation: Operation) -> Unit) {
+            checkEmpty(callBack)
+        }
+
+        fun checkEmpty(callBack: (operation: Operation) -> Unit) {
+            if (isEmpty()) {
+                showErrorOnDisplay(getString(R.string.no_data_found))
+            }
+            callBack.invoke(Operation())
+        }
+
         override fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit) {
-            adapter.notifyItemInserted(size - 1)
+            adapter.notifyItemInserted(position)
             getErrorTextView()?.gone()
             callBack.invoke(Operation())
         }
@@ -43,29 +65,7 @@ abstract class MyListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject> 
             callBack.invoke(Operation())
         }
 
-        override fun listCleared(lastListSize: Int, callBack: (operation: Operation) -> Unit) {
-            adapter.notifyItemRangeRemoved(0, lastListSize)
-            callBack.invoke(Operation())
-        }
-
-        override fun emptyListAdded(callBack: (operation: Operation) -> Unit) = checkEmpty(callBack)
-
-        override fun itemRemovedAt(position: Int, callBack: (operation: Operation) -> Unit) {
-            adapter.notifyItemRemoved(position)
-            checkEmpty(callBack)
-        }
-
-        override fun itemRemovedUnknownPosition(callBack: (operation: Operation) -> Unit) =
-            checkEmpty(callBack)
-
         override fun emptyObjectForNullAssertion(): ModelType = emptyObjectForNullAssertion
-
-        fun checkEmpty(callBack: (operation: Operation) -> Unit) {
-            if (isEmpty()) {
-                showErrorOnDisplay(getString(R.string.no_data_found))
-            }
-            callBack.invoke(Operation())
-        }
     }
 
     /**
@@ -77,7 +77,8 @@ abstract class MyListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject> 
      * This function will set the recyclerView and swipeRefreshView if needed.
      * This function should be overridden if you have to do some extra work in this method.
      */
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setRv()
         setSwipeRefresh()
     }
@@ -111,6 +112,7 @@ abstract class MyListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject> 
      * To show the error message on the display if you want.
      */
     protected open fun showErrorOnDisplay(text: String) {
+        if (text.isBlank()) return
         getErrorTextView()?.apply {
             setText(text)
             show()

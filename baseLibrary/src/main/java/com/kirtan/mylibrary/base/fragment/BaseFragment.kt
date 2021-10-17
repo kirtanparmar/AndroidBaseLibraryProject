@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 /**
  * Extend this class with your fragment class for using the library features.
  */
-abstract class MyFragment<SCREEN : ViewDataBinding> : Fragment() {
+abstract class BaseFragment<SCREEN : ViewDataBinding> : Fragment() {
     /**
      * You can access the screen object through out the fragment anywhere you want.
      * ie: screen.textViewId.text = "Hello world"

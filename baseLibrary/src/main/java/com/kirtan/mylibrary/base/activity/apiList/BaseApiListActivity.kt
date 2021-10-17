@@ -6,7 +6,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
-import com.kirtan.mylibrary.base.activity.MyListActivity
+import com.kirtan.mylibrary.base.activity.BaseListActivity
 import com.kirtan.mylibrary.base.dataHolder.BaseObject
 import com.kirtan.mylibrary.base.viewModels.ApiViewModel
 import com.kirtan.mylibrary.utils.parsedResponseForList.ListParsedResponse
@@ -16,8 +16,8 @@ import timber.log.Timber
 /**
  * Extend this class when you want to use the listing with api in your activity.
  */
-abstract class MyApiListActivity<Screen : ViewDataBinding, ModelType : BaseObject, ApiRequestType : Any?, ApiResponseType> :
-    MyListActivity<Screen, ModelType>(),
+abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObject, ApiRequestType : Any?, ApiResponseType> :
+    BaseListActivity<Screen, ModelType>(),
     ApiListCallingScreen<ApiRequestType, ApiResponseType, ListParsedResponse<ModelType>> {
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
@@ -64,8 +64,8 @@ abstract class MyApiListActivity<Screen : ViewDataBinding, ModelType : BaseObjec
      * Function will observe the api response and will request for parsing the response into the list of models to be listed in the list screen.
      */
     override fun observeApiResponse(apiResponse: LiveData<ApiResponseType>) {
-        apiResponse.observe(this@MyApiListActivity) { responseBody ->
-            parseListFromResponse(responseBody).observe(this@MyApiListActivity) { parsedResponse ->
+        apiResponse.observe(this@BaseApiListActivity) { responseBody ->
+            parseListFromResponse(responseBody).observe(this@BaseApiListActivity) { parsedResponse ->
                 if (parsedResponse.isSuccess) getRecyclerView().post { models.addAll(parsedResponse.apiListData) }
                 else showErrorOnDisplay(parsedResponse.errorMessage)
             }

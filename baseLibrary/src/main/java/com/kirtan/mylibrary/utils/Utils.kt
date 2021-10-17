@@ -9,11 +9,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.kirtan.mylibrary.R
-import com.kirtan.mylibrary.base.activity.MyActivity
+import com.kirtan.mylibrary.base.activity.BaseActivity
 
 var alertDialogActivity: AlertDialog? = null
 
-fun MyActivity<*>.showMessage(
+fun BaseActivity<*>.showMessage(
     title: CharSequence? = null,
     message: CharSequence?,
     cancelable: Boolean = false,
@@ -71,7 +71,7 @@ private fun baseToast(context: Context, text: CharSequence) {
     Toast.makeText(context, text, Toast.LENGTH_LONG).show()
 }
 
-fun MyActivity<*>.toast(text: CharSequence) {
+fun BaseActivity<*>.toast(text: CharSequence) {
     baseToast(this, text)
 }
 

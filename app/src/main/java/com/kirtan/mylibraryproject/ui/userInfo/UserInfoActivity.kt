@@ -6,7 +6,7 @@ import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.kirtan.mylibrary.base.activity.MyAPIActivity
+import com.kirtan.mylibrary.base.activity.BaseAPIActivity
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.apis.Apis
 import com.kirtan.mylibraryproject.apis.responseModels.userInfoResponse.UserInfoResponse
@@ -15,7 +15,7 @@ import com.kirtan.mylibraryproject.databinding.ActivityUserInfoBinding
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
-class UserInfoActivity : MyAPIActivity<ActivityUserInfoBinding, String, UserInfoResponse>() {
+class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserInfoResponse>() {
     private var user: User = User()
 
     override fun getApiCallingFunction(apiRequest: String): LiveData<Response<UserInfoResponse>?> =

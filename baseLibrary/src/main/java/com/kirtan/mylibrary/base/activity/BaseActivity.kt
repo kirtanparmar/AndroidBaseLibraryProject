@@ -11,7 +11,7 @@ import com.kirtan.mylibrary.utils.toast
 /**
  * Extend this class with your activity class for using the library features.
  */
-abstract class MyActivity<Screen : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<Screen : ViewDataBinding> : AppCompatActivity() {
     /**
      * You can access the screen object through out the activity anywhere you want.
      * ie: screen.textViewId.text = "Hello world"

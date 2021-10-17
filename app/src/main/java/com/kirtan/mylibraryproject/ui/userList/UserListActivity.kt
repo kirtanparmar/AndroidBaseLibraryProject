@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
-import com.kirtan.mylibrary.base.activity.apiPagingList.MyApiListPagingListActivity
+import com.kirtan.mylibrary.base.activity.apiPagingList.BaseApiListPagingListActivity
 import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.apis.Apis
@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
 class UserListActivity :
-    MyApiListPagingListActivity<ActivityUserListBinding, User, Int, UserListResponse>() {
+    BaseApiListPagingListActivity<ActivityUserListBinding, User, Int, UserListResponse>() {
     override fun getFirstPagePosition(): Int = 0
     override fun getRecyclerView(): RecyclerView = screen.rv
     override fun getCenterProgressBar(): ProgressBar = screen.centerProgress
