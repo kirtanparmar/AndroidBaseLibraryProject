@@ -13,6 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyLibraryProject">
         <activity
+            android:name=".ui.menu.MenuActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyLibraryProject.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.userList.UserListPagingActivity"
             android:exported="true"
             android:theme="@style/Theme.MyLibraryProject.NoActionBar" />
@@ -25,13 +35,7 @@
         <activity
             android:name=".ui.userList.UserListActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyLibraryProject.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.MyLibraryProject.NoActionBar" />
     </application>
 
 </manifest>
