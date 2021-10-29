@@ -26,7 +26,9 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getSwipeRefreshLayout()?.setOnRefreshListener { loadAPIData() }
-        loadAPIData()
+        apiViewModel.status.observe(this) { status ->
+            if (status == ApiViewModel.ApiStatus.INITIATE) loadAPIData()
+        }
         observeApiResponse(apiViewModel.getResponseData())
     }
 
@@ -34,6 +36,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      * This function loads the data through the api.
      */
     private fun loadAPIData() {
+        apiViewModel.status.value = ApiViewModel.ApiStatus.LOADING
         showPageProgress()
         getApiCallingFunction(getApiRequest()).observe(this) { response ->
             gonePageProgress()
@@ -43,7 +46,10 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
             }
             if (response.isSuccessful) {
                 val body = response.body()
-                body?.let { apiViewModel.setResponseData(it) }
+                body?.let {
+                    apiViewModel.setResponseData(it)
+                    apiViewModel.status.value = ApiViewModel.ApiStatus.LOADED
+                }
             } else {
                 toast(response.message())
             }
