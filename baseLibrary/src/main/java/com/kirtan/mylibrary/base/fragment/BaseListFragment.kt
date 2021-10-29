@@ -27,7 +27,11 @@ abstract class BaseListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject
      * This list contains the callbacks for the many functions in the arraylist.
      */
     protected val models = object : BaseArrayList<ModelType>() {
-        override fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit) {
+        override fun newItemAdded(
+            position: Int,
+            model: ModelType,
+            callBack: (operation: Operation) -> Unit
+        ) {
             adapter.notifyItemInserted(size - 1)
             getErrorTextView()?.gone()
             callBack.invoke(Operation())
@@ -35,10 +39,10 @@ abstract class BaseListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject
 
         override fun newItemRangeAdded(
             start: Int,
-            end: Int,
+            rangeSize: Int,
             callBack: (operation: Operation) -> Unit
         ) {
-            adapter.notifyItemRangeInserted(start, end)
+            adapter.notifyItemRangeInserted(start, rangeSize)
             getErrorTextView()?.gone()
             callBack.invoke(Operation())
         }

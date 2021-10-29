@@ -39,7 +39,7 @@ abstract class BaseArrayList<T : BaseObject> : ArrayList<T>(), OnArrayListOperat
             if (super.addAll(index, elements)) {
                 newItemRangeAdded(
                     index,
-                    index + elements.size
+                    elements.size
                 )
                 true
             } else {
@@ -81,7 +81,7 @@ abstract class BaseArrayList<T : BaseObject> : ArrayList<T>(), OnArrayListOperat
         else try {
             if (super.addAll(index, elements)) newItemRangeAdded(
                 index,
-                index + elements.size - 1,
+                elements.size,
                 callBack
             )
             else "Failed to add elements into the list.".operateOnFail(callBack)

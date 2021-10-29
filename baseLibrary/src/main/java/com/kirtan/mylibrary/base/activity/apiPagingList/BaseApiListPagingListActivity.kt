@@ -25,16 +25,31 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
      * This viewModel is auto implemented, no need to override this viewModel.
      */
     override val apiViewModel: ApiViewModel<ApiResponseType> by viewModels()
+
     private val firstPage: Int get() = getFirstPagePosition()
-    private var totalItems: Int = 0
-    private var dataLoading: Boolean = false
-    private var page: Int = firstPage
     private val dataLoaderModel by lazy { getLoaderDataModel() }
+
+    private val pagingViewModel: PagingViewModel by viewModels()
+    private var totalItems: Int
+        get() = pagingViewModel.totalItems
+        set(value) {
+            pagingViewModel.totalItems = value
+        }
+    private var dataLoading: Boolean
+        get() = pagingViewModel.dataLoading
+        set(value) {
+            pagingViewModel.dataLoading = value
+        }
+    private var page: Int
+        get() = pagingViewModel.page
+        set(value) {
+            pagingViewModel.page = value
+        }
 
     /**
      * @return next page to be fetched from API
      */
-    fun getPage() = page
+    fun getCurrentPage() = page
 
     /**
      * Function will auto load api data, you only have to parse the response.
@@ -51,6 +66,9 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                 if (!dataLoading && dy > 0) calculateForListingNewItems()
             }
         })
+        if (page == -1) {
+            page = firstPage
+        }
         if (page == firstPage) {
             dataLoading = true
             loadPage()
@@ -73,12 +91,12 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     }
 
     private fun loadPage() {
-        getRecyclerView().post { if (models.size > 0) models.add(dataLoaderModel) }
+        if (models.size > 0) getRecyclerView().post { models.add(getLoaderDataModel()) }
         showPageProgress()
         getApiCallingFunction(getApiRequest()).observe(this) { response ->
             Timber.d("$response")
-            getRecyclerView().post { if (models.size > 0) models.removeAt(models.size - 1) }
             dataLoading = false
+            if (models.size > 0) getRecyclerView().post { models.removeAt(models.size - 1) }
             gonePageProgress()
             if (response == null) {
                 toast(getString(R.string.server_unreachable))
@@ -104,16 +122,19 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
      */
     override fun observeApiResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this) { responseBody ->
-            parseListFromResponse(responseBody).observe(this) { parsedResponse ->
-                if (parsedResponse.isSuccess) {
-                    totalItems = parsedResponse.newTotalItemCount
-                    page++
-                    getRecyclerView().post {
-                        models.addAll(parsedResponse.newPageData) {
-                            getRecyclerView().post { calculateForListingNewItems() }
+            if (!apiViewModel.dataFed) {
+                apiViewModel.dataFed = true
+                parseListFromResponse(responseBody).observe(this) { parsedResponse ->
+                    if (parsedResponse.isSuccess) {
+                        totalItems = parsedResponse.newTotalItemCount
+                        page++
+                        getRecyclerView().post {
+                            models.addAll(parsedResponse.newPageData) {
+                                getRecyclerView().post { calculateForListingNewItems() }
+                            }
                         }
-                    }
-                } else showErrorOnDisplay(parsedResponse.errorMessage)
+                    } else showErrorOnDisplay(parsedResponse.errorMessage)
+                }
             }
         }
     }
@@ -155,9 +176,10 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         getSwipeRefreshLayout()?.setOnRefreshListener {
             getErrorTextView()?.gone()
             page = firstPage
-            models.clear()
-            dataLoading = true
-            loadPage()
+            models.clear {
+                dataLoading = true
+                loadPage()
+            }
         }
     }
 }

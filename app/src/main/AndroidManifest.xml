@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyLibraryProject">
         <activity
+            android:name=".ui.userList.UserListPagingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyLibraryProject.NoActionBar" />
+        <activity
             android:name=".ui.userInfo.UserInfoActivity"
             android:exported="true"
             android:screenOrientation="portrait"

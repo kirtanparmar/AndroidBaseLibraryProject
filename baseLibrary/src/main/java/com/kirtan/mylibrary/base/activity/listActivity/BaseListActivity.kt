@@ -73,9 +73,16 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
             callBack.invoke(Operation())
         }
 
-        override fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit) {
+        override fun newItemAdded(
+            position: Int,
+            callBack: (operation: Operation) -> Unit
+        ) {
             if (copyToViewModelList) {
-                viewModelList.add(position, get(position))
+                try {
+                    viewModelList.add(position, get(position))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
             adapter.notifyItemInserted(position)
             getErrorTextView()?.gone()
@@ -84,16 +91,16 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
 
         override fun newItemRangeAdded(
             start: Int,
-            end: Int,
+            rangeSize: Int,
             callBack: (operation: Operation) -> Unit
         ) {
             if (copyToViewModelList) {
                 viewModelList.addAll(
                     start,
-                    subList(fromIndex = start, toIndex = end)
+                    subList(fromIndex = start, toIndex = start + rangeSize)
                 )
             }
-            adapter.notifyItemRangeInserted(start, end)
+            adapter.notifyItemRangeInserted(start, rangeSize)
             getErrorTextView()?.gone()
             callBack.invoke(Operation())
         }

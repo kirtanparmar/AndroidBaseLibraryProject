@@ -9,7 +9,7 @@ interface OnArrayListOperations<T> {
     fun emptyObjectForNullAssertion(): T
     fun newItemRangeAdded(
         start: Int,
-        end: Int,
+        rangeSize: Int,
         callBack: (operation: Operation) -> Unit = {}
     )
 }

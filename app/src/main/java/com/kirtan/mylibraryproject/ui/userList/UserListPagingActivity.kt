@@ -61,7 +61,7 @@ class UserListPagingActivity :
     override fun getLoaderDataModel(): User =
         User().also { it.isLoaderModel = true }
 
-    override fun getApiRequest(): Int = getPage()
+    override fun getApiRequest(): Int = getCurrentPage()
     override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
     override fun getBody(): View? = null
     override val emptyObjectForNullAssertion: User = User()
