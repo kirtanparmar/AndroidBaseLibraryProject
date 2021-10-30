@@ -5,20 +5,29 @@ import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
 import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiCallingScreen
-import com.kirtan.mylibrary.base.viewModels.ApiViewModel
+import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
+import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel.ApiStatus.*
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.show
 import com.kirtan.mylibrary.utils.toast
+import timber.log.Timber
 
 /**
  * This class should be used when you need to call the apis in your activity.
  */
 abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
     BaseActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
+    val tag = "BaseAPIActivity"
+
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */
-    override val apiViewModel: ApiViewModel<ApiResponseType> by viewModels()
+    override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
+    private var apiCallingStatus: ApiCallingViewModel.ApiStatus?
+        get() = apiCallingViewModel.status.value
+        set(value) {
+            apiCallingViewModel.status.value = value
+        }
 
     /**
      * This method should be overridden whenever you needed to set up screen though code.
@@ -26,20 +35,25 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getSwipeRefreshLayout()?.setOnRefreshListener { loadAPIData() }
-        apiViewModel.status.observe(this) { status ->
-            if (status == ApiViewModel.ApiStatus.INITIATE) loadAPIData()
+        apiCallingViewModel.status.observe(this) { status ->
+            when (status) {
+                INITIATE -> loadAPIData()
+                LOADED -> gonePageProgress()
+                LOADING -> showPageProgress()
+                null -> Timber.d("Found null type of api status.")
+            }
         }
-        observeApiResponse(apiViewModel.getResponseData())
+        observeApiResponse(apiCallingViewModel.getResponseData())
     }
 
     /**
      * This function loads the data through the api.
      */
     private fun loadAPIData() {
-        apiViewModel.status.value = ApiViewModel.ApiStatus.LOADING
-        showPageProgress()
+        if (apiCallingStatus == LOADING) return
+        apiCallingStatus = LOADING
         getApiCallingFunction(getApiRequest()).observe(this) { response ->
-            gonePageProgress()
+            apiCallingStatus = LOADED
             if (response == null) {
                 toast(getString(R.string.server_unreachable))
                 return@observe
@@ -47,8 +61,8 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
             if (response.isSuccessful) {
                 val body = response.body()
                 body?.let {
-                    apiViewModel.setResponseData(it)
-                    apiViewModel.status.value = ApiViewModel.ApiStatus.LOADED
+                    apiCallingViewModel.setResponseData(it)
+                    apiCallingViewModel.status.value = LOADED
                 }
             } else {
                 toast(response.message())
@@ -60,18 +74,22 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      * Function will display the loader according the need.
      */
     private fun showPageProgress() {
-        getBody()?.gone()
+        getBody()?.post { getBody()?.gone() }
         if (getSwipeRefreshLayout()?.isRefreshing == true) return
-        getCenterProgressBar()?.show()
+        getCenterProgressBar()?.post { getCenterProgressBar()?.show() }
     }
 
     /**
      * Function will hide the loader according the need.
      */
     private fun gonePageProgress() {
-        if (getSwipeRefreshLayout()?.isRefreshing == true)
-            getSwipeRefreshLayout()?.isRefreshing = false
-        else getCenterProgressBar()?.gone()
-        getBody()?.show()
+        getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }
+        getSwipeRefreshLayout()?.post { getCenterProgressBar()?.gone() }
+        getBody()?.post { getBody()?.show() }
+    }
+
+    override fun onDestroy() {
+        if (apiCallingStatus == LOADING) apiCallingStatus = INITIATE
+        super.onDestroy()
     }
 }

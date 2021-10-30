@@ -9,7 +9,7 @@ import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.dataHolder.BaseObject
 import com.kirtan.mylibrary.base.fragment.BaseListFragment
-import com.kirtan.mylibrary.base.viewModels.ApiViewModel
+import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.mylibrary.utils.parsedResponseForList.ListParsedResponse
 import com.kirtan.mylibrary.utils.toast
 import timber.log.Timber
@@ -23,7 +23,7 @@ abstract class BaseApiListFragment<Screen : ViewDataBinding, ModelType : BaseObj
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */
-    override val apiViewModel: ApiViewModel<ApiResponseType> by viewModels()
+    override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
 
     /**
      * This function will auto load api data, you only have to parse the response.
@@ -31,7 +31,7 @@ abstract class BaseApiListFragment<Screen : ViewDataBinding, ModelType : BaseObj
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadPage()
-        observeApiResponse(apiViewModel.getResponseData())
+        observeApiResponse(apiCallingViewModel.getResponseData())
     }
 
     /**
@@ -53,7 +53,7 @@ abstract class BaseApiListFragment<Screen : ViewDataBinding, ModelType : BaseObj
                     toast(response.message())
                     return@observe
                 }
-                apiViewModel.setResponseData(body)
+                apiCallingViewModel.setResponseData(body)
             } else {
                 Timber.d("${response.code()} ${response.message()}")
                 toast(response.message())

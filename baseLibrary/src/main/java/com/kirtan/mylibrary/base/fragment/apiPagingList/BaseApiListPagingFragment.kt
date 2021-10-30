@@ -11,7 +11,7 @@ import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.ListPagingScreen
 import com.kirtan.mylibrary.base.fragment.BaseListFragment
-import com.kirtan.mylibrary.base.viewModels.ApiViewModel
+import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.mylibrary.utils.PagingListModel
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
@@ -25,7 +25,7 @@ abstract class BaseApiListPagingFragment<Screen : ViewDataBinding, ModelType : P
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */
-    override val apiViewModel: ApiViewModel<ApiResponseType> by viewModels()
+    override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
     private val firstPage: Int get() = getFirstPagePosition()
     private var totalItems: Int = 0
     private var dataLoading: Boolean = false
@@ -44,7 +44,7 @@ abstract class BaseApiListPagingFragment<Screen : ViewDataBinding, ModelType : P
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeApiResponse(apiViewModel.getResponseData())
+        observeApiResponse(apiCallingViewModel.getResponseData())
         getRecyclerView().addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -92,7 +92,7 @@ abstract class BaseApiListPagingFragment<Screen : ViewDataBinding, ModelType : P
                     toast(response.message())
                     return@observe
                 }
-                apiViewModel.setResponseData(body)
+                apiCallingViewModel.setResponseData(body)
             } else {
                 Timber.d("${response.code()} ${response.message()}")
                 toast(response.message())

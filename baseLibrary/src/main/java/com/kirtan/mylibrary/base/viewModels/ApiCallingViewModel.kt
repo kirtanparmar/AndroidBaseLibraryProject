@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ApiViewModel<ApiResponseType> : ViewModel() {
+class ApiCallingViewModel<ApiResponseType> : ViewModel() {
     var status: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.INITIATE)
     var dataFed: Boolean = false
     private val responseData: MutableLiveData<ApiResponseType> = MutableLiveData()

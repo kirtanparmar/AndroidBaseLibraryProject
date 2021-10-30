@@ -29,7 +29,6 @@ abstract class BaseListFragment<SCREEN : ViewDataBinding, ModelType : BaseObject
     protected val models = object : BaseArrayList<ModelType>() {
         override fun newItemAdded(
             position: Int,
-            model: ModelType,
             callBack: (operation: Operation) -> Unit
         ) {
             adapter.notifyItemInserted(size - 1)

@@ -8,7 +8,7 @@ import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.activity.listActivity.BaseListActivity
 import com.kirtan.mylibrary.base.dataHolder.BaseObject
-import com.kirtan.mylibrary.base.viewModels.ApiViewModel
+import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.mylibrary.utils.parsedResponseForList.ListParsedResponse
 import timber.log.Timber
 
@@ -21,11 +21,11 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */
-    override val apiViewModel: ApiViewModel<ApiResponseType> by viewModels()
-    private var apiStatus: ApiViewModel.ApiStatus?
-        get() = apiViewModel.status.value
+    override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
+    private var apiCallingStatus: ApiCallingViewModel.ApiStatus?
+        get() = apiCallingViewModel.status.value
         set(value) {
-            apiViewModel.status.value = value
+            apiCallingViewModel.status.value = value
         }
 
     /**
@@ -33,12 +33,12 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (apiStatus == ApiViewModel.ApiStatus.INITIATE) loadPage()
-        observeApiResponse(apiViewModel.getResponseData())
-        apiViewModel.status.observe(this) { status ->
+        if (apiCallingStatus == ApiCallingViewModel.ApiStatus.INITIATE) loadPage()
+        observeApiResponse(apiCallingViewModel.getResponseData())
+        apiCallingViewModel.status.observe(this) { status ->
             when (status) {
-                ApiViewModel.ApiStatus.INITIATE, ApiViewModel.ApiStatus.LOADING -> showPageProgress()
-                ApiViewModel.ApiStatus.LOADED, null -> gonePageProgress()
+                ApiCallingViewModel.ApiStatus.INITIATE, ApiCallingViewModel.ApiStatus.LOADING -> showPageProgress()
+                ApiCallingViewModel.ApiStatus.LOADED, null -> gonePageProgress()
             }
         }
     }
@@ -48,8 +48,8 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
      */
     private fun loadPage() {
         Timber.d("Loading API Data")
-        if (apiStatus != ApiViewModel.ApiStatus.INITIATE) return
-        apiStatus = ApiViewModel.ApiStatus.LOADING
+        if (apiCallingStatus != ApiCallingViewModel.ApiStatus.INITIATE) return
+        apiCallingStatus = ApiCallingViewModel.ApiStatus.LOADING
         getApiCallingFunction(getApiRequest()).observe(this) { response ->
             Timber.d("$response")
             if (response == null) {
@@ -63,7 +63,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
                     showErrorOnDisplay(response.message())
                     return@observe
                 }
-                apiViewModel.setResponseData(body)
+                apiCallingViewModel.setResponseData(body)
             } else {
                 Timber.d("${response.code()} ${response.message()}")
                 showErrorOnDisplay(response.message())
@@ -78,8 +78,8 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
         apiResponse.observe(this@BaseApiListActivity) { responseBody ->
             parseListFromResponse(responseBody).observe(this@BaseApiListActivity) { parsedResponse ->
                 if (parsedResponse.isSuccess) {
-                    if (apiStatus == ApiViewModel.ApiStatus.LOADING) {
-                        apiStatus = ApiViewModel.ApiStatus.LOADED
+                    if (apiCallingStatus == ApiCallingViewModel.ApiStatus.LOADING) {
+                        apiCallingStatus = ApiCallingViewModel.ApiStatus.LOADED
                         Timber.d("API Data Loaded : Success")
                         getRecyclerView().post {
                             models.addAll(parsedResponse.apiListData)
@@ -117,7 +117,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
      */
     override fun setSwipeRefresh() {
         getSwipeRefreshLayout()?.setOnRefreshListener {
-            apiStatus = ApiViewModel.ApiStatus.INITIATE
+            apiCallingStatus = ApiCallingViewModel.ApiStatus.INITIATE
             hideErrorOnDisplay()
             models.clear()
             loadPage()

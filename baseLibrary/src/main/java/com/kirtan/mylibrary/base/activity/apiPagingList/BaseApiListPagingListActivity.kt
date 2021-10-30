@@ -10,7 +10,7 @@ import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.ListPagingScreen
 import com.kirtan.mylibrary.base.activity.listActivity.BaseListActivity
-import com.kirtan.mylibrary.base.viewModels.ApiViewModel
+import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.mylibrary.utils.PagingListModel
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
@@ -24,7 +24,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */
-    override val apiViewModel: ApiViewModel<ApiResponseType> by viewModels()
+    override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
 
     private val firstPage: Int get() = getFirstPagePosition()
     private val dataLoaderModel by lazy { getLoaderDataModel() }
@@ -58,7 +58,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeApiResponse(apiViewModel.getResponseData())
+        observeApiResponse(apiCallingViewModel.getResponseData())
         getRecyclerView().addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -109,7 +109,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                     toast(response.message())
                     return@observe
                 }
-                apiViewModel.setResponseData(body)
+                apiCallingViewModel.setResponseData(body)
             } else {
                 Timber.d("${response.code()} ${response.message()}")
                 toast(response.message())
@@ -122,8 +122,8 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
      */
     override fun observeApiResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this) { responseBody ->
-            if (!apiViewModel.dataFed) {
-                apiViewModel.dataFed = true
+            if (!apiCallingViewModel.dataFed) {
+                apiCallingViewModel.dataFed = true
                 parseListFromResponse(responseBody).observe(this) { parsedResponse ->
                     if (parsedResponse.isSuccess) {
                         totalItems = parsedResponse.newTotalItemCount

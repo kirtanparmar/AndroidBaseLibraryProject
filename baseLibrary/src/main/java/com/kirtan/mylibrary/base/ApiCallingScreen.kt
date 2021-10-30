@@ -4,14 +4,14 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.kirtan.mylibrary.base.viewModels.ApiViewModel
+import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import retrofit2.Response
 
 interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
     /**
      * this viewModel object must be created.
      */
-    val apiViewModel: ApiViewModel<ApiResponse>
+    val apiCallingViewModel: ApiCallingViewModel<ApiResponse>
 
     /**
      * @param apiRequest created apiRequest is automatically passed which you have created.
