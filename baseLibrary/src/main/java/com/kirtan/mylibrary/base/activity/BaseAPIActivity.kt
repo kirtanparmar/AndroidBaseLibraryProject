@@ -37,10 +37,13 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         getSwipeRefreshLayout()?.setOnRefreshListener { loadAPIData() }
         apiCallingViewModel.status.observe(this) { status ->
             when (status) {
-                INITIATE -> loadAPIData()
-                LOADED -> gonePageProgress()
+                INIT -> loadAPIData()
+                COMPLETE -> gonePageProgress()
                 LOADING -> showPageProgress()
-                null -> Timber.d("Found null type of api status.")
+                null -> {
+                    apiCallingStatus = INIT
+                    Timber.d("Found null type of api status.")
+                }
             }
         }
         observeApiResponse(apiCallingViewModel.getResponseData())
@@ -53,7 +56,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         if (apiCallingStatus == LOADING) return
         apiCallingStatus = LOADING
         getApiCallingFunction(getApiRequest()).observe(this) { response ->
-            apiCallingStatus = LOADED
+            apiCallingStatus = COMPLETE
             if (response == null) {
                 toast(getString(R.string.server_unreachable))
                 return@observe
@@ -62,7 +65,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
                 val body = response.body()
                 body?.let {
                     apiCallingViewModel.setResponseData(it)
-                    apiCallingViewModel.status.value = LOADED
+                    apiCallingViewModel.status.value = COMPLETE
                 }
             } else {
                 toast(response.message())
@@ -74,9 +77,9 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      * Function will display the loader according the need.
      */
     private fun showPageProgress() {
-        getBody()?.post { getBody()?.gone() }
+        getBody()?.gone()
         if (getSwipeRefreshLayout()?.isRefreshing == true) return
-        getCenterProgressBar()?.post { getCenterProgressBar()?.show() }
+        getCenterProgressBar()?.show()
     }
 
     /**
@@ -84,12 +87,12 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      */
     private fun gonePageProgress() {
         getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }
-        getSwipeRefreshLayout()?.post { getCenterProgressBar()?.gone() }
-        getBody()?.post { getBody()?.show() }
+        getCenterProgressBar()?.gone()
+        getBody()?.show()
     }
 
     override fun onDestroy() {
-        if (apiCallingStatus == LOADING) apiCallingStatus = INITIATE
+        if (apiCallingStatus == LOADING) apiCallingStatus = INIT
         super.onDestroy()
     }
 }
