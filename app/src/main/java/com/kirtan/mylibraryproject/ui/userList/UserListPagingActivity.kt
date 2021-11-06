@@ -65,4 +65,5 @@ class UserListPagingActivity :
     override val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
     override fun getBody(): View? = null
     override val emptyObjectForNullAssertion: User = User()
+    override fun getErrorView(): View? = null
 }

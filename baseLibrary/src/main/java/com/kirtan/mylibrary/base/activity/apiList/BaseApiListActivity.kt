@@ -34,7 +34,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (apiCallingStatus == ApiCallingViewModel.ApiStatus.INIT) loadPage()
-        observeApiResponse(apiCallingViewModel.getResponseData())
+        observeApiDataResponse(apiCallingViewModel.getResponseData())
         apiCallingViewModel.status.observe(this) { status ->
             when (status) {
                 ApiCallingViewModel.ApiStatus.INIT, ApiCallingViewModel.ApiStatus.LOADING -> showPageProgress()
@@ -74,7 +74,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     /**
      * Function will observe the api response and will request for parsing the response into the list of models to be listed in the list screen.
      */
-    override fun observeApiResponse(apiResponse: LiveData<ApiResponseType>) {
+    override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this@BaseApiListActivity) { responseBody ->
             parseListFromResponse(responseBody).observe(this@BaseApiListActivity) { parsedResponse ->
                 if (parsedResponse.isSuccess) {

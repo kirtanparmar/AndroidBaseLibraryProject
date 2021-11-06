@@ -58,7 +58,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeApiResponse(apiCallingViewModel.getResponseData())
+        observeApiDataResponse(apiCallingViewModel.getResponseData())
         getRecyclerView().addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -120,7 +120,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     /**
      * Function should not be overridden.
      */
-    override fun observeApiResponse(apiResponse: LiveData<ApiResponseType>) {
+    override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this) { responseBody ->
             if (!apiCallingViewModel.dataFed) {
                 apiCallingViewModel.dataFed = true

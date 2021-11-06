@@ -31,7 +31,7 @@ abstract class BaseApiListFragment<Screen : ViewDataBinding, ModelType : BaseObj
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadPage()
-        observeApiResponse(apiCallingViewModel.getResponseData())
+        observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class BaseApiListFragment<Screen : ViewDataBinding, ModelType : BaseObj
     /**
      * Function will observe the api response and will request for parsing the response into the list of models to be listed in the list screen.
      */
-    override fun observeApiResponse(apiResponse: LiveData<ApiResponseType>) {
+    override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(viewLifecycleOwner) { responseBody ->
             parseListFromResponse(responseBody).observe(viewLifecycleOwner) { parsedResponse ->
                 if (parsedResponse.isSuccess)

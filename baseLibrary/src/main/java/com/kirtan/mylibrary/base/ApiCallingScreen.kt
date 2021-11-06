@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.textview.MaterialTextView
 import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import retrofit2.Response
 
@@ -27,7 +28,7 @@ interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
     /**
      * Observe the response which will be the type of #ApiResponse
      */
-    fun observeApiResponse(apiResponse: LiveData<ApiResponse>)
+    fun observeApiDataResponse(apiResponse: LiveData<ApiResponse>)
 
     /**
      * @return should be the center aligned progressBar if you are using else can be null.
@@ -43,4 +44,16 @@ interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
      * @return this view should be containing all the views in it except the center aligned progressBar.
      */
     fun getBody(): View?
+
+    /**
+     * This view is for displaying error message.
+     * @return @MaterialTextView or @null.
+     */
+    fun getErrorTextView(): MaterialTextView?
+
+    /**
+     * This view is for displaying error graphics.
+     * @return @View or @null.
+     */
+    fun getErrorView(): View?
 }

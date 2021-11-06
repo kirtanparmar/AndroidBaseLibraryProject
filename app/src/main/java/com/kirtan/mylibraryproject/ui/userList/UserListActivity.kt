@@ -62,4 +62,6 @@ class UserListActivity :
     override fun getApiRequest(): Int {
         return 0
     }
+
+    override fun getErrorView(): View? = null
 }

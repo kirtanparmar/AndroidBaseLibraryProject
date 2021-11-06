@@ -21,7 +21,7 @@ abstract class BaseAPIFragment<Screen : ViewDataBinding, ApiRequestType : Any?, 
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadAPIData()
-        observeApiResponse(apiCallingViewModel.getResponseData())
+        observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
 
     /**

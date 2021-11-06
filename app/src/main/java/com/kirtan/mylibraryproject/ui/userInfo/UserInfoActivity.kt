@@ -6,6 +6,7 @@ import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.textview.MaterialTextView
 import com.kirtan.mylibrary.base.activity.BaseAPIActivity
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.apis.Apis
@@ -26,7 +27,7 @@ class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserIn
 
     override fun getApiRequest(): String = user.id
 
-    override fun observeApiResponse(apiResponse: LiveData<UserInfoResponse>) {
+    override fun observeApiDataResponse(apiResponse: LiveData<UserInfoResponse>) {
         apiResponse.observe(this) { response -> screen.model = response }
     }
 
@@ -43,4 +44,6 @@ class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserIn
     override fun getCenterProgressBar(): ProgressBar = screen.centerProgress
     override fun getBody(): View = screen.body
     override fun getSwipeRefreshLayout(): SwipeRefreshLayout = screen.swipeRefresh
+    override fun getErrorTextView(): MaterialTextView? = null
+    override fun getErrorView(): View? = null
 }
