@@ -87,6 +87,15 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         getCenterProgressBar()?.show()
     }
 
+    /**
+     * Function will hide the loader according the need.
+     */
+    private fun gonePageProgress() {
+        getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }
+        getCenterProgressBar()?.gone()
+        getBody()?.show()
+    }
+
     private fun showErrorOnDisplay(error: String) {
         if (error.isBlank()) return
         getErrorTextView()?.show()
@@ -99,15 +108,6 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         getErrorTextView()?.gone()
         getErrorTextView()?.text = ""
         getErrorView()?.gone()
-    }
-
-    /**
-     * Function will hide the loader according the need.
-     */
-    private fun gonePageProgress() {
-        getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }
-        getCenterProgressBar()?.gone()
-        getBody()?.show()
     }
 
     override fun onDestroy() {
