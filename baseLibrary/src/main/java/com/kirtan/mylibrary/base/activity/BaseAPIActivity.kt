@@ -19,25 +19,50 @@ import timber.log.Timber
  */
 abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
     BaseActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
-    val tag = "BaseAPIActivity"
+    override val tag: String get() = "BaseAPIActivity"
 
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */
     override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
+    private val apiStatusObserver: Observer<ApiCallingViewModel.ApiStatus> = Observer { status ->
+        Timber.d(tag, "apiStatusObserver: newStatus:- $status")
+        when (status) {
+            INIT -> loadAPIData()
+            COMPLETE -> gonePageProgress()
+            LOADING -> showPageProgress()
+            null -> {
+                Timber.d(
+                    tag,
+                    "apiStatusObserver: Found null type of api status, resetting to $INIT."
+                )
+                apiCallingStatus = INIT
+            }
+        }
+    }
     private val observeResponseFromApi: Observer<Response<ApiResponseType>?> =
-        Observer { apiResponse -> apiCallingViewModel.setApiResponse(apiResponse) }
+        Observer { apiResponse ->
+            Timber.d(tag, "observeResponseFromApi: $apiResponse")
+            apiCallingViewModel.setApiResponse(apiResponse)
+        }
     private val observeResponseStoredIntoLocal: Observer<Response<ApiResponseType>?> =
         Observer { response ->
+            Timber.d(tag, "observeResponseStoredIntoLocal: $response")
             if (response == null) {
+                Timber.d(tag, "observeResponseStoredIntoLocal: response is null.")
                 showErrorOnDisplay(getString(R.string.server_unreachable))
                 return@Observer
             }
             if (response.isSuccessful) {
+                Timber.d(tag, "observeResponseStoredIntoLocal: response is successful.")
                 val body = response.body()
-                body?.let {
-                    apiCallingViewModel.setResponseData(it)
+                if (body == null) {
+                    Timber.d(tag, "observeResponseStoredIntoLocal: response body null.")
+                    showErrorOnDisplay(response.message())
+                    return@Observer
                 }
+                Timber.d(tag, "observeResponseStoredIntoLocal: response body: $body.")
+                apiCallingViewModel.setResponseData(body)
             } else showErrorOnDisplay(response.message())
         }
 
@@ -52,18 +77,12 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getSwipeRefreshLayout()?.setOnRefreshListener { apiCallingStatus = INIT }
-        apiCallingViewModel.status.observe(this) { status ->
-            when (status) {
-                INIT -> loadAPIData()
-                COMPLETE -> gonePageProgress()
-                LOADING -> showPageProgress()
-                null -> {
-                    Timber.d("Found null type of api status.")
-                    apiCallingStatus = INIT
-                }
-            }
+        Timber.d(tag, "onCreate: ")
+        getSwipeRefreshLayout()?.setOnRefreshListener {
+            Timber.d(tag, "setOnRefreshListener: refreshing page.")
+            apiCallingStatus = INIT
         }
+        apiCallingViewModel.status.observe(this, apiStatusObserver)
         apiCallingViewModel.getApiResponse().observe(this, observeResponseStoredIntoLocal)
         observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
@@ -72,8 +91,13 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      * This function loads the data through the api.
      */
     private fun loadAPIData() {
-        if (apiCallingStatus == LOADING) return
+        Timber.d(tag, "loadAPIData: ")
+        if (apiCallingStatus == LOADING) {
+            Timber.d(tag, "loadAPIData: api already loading.")
+            return
+        }
         apiCallingStatus = LOADING
+        Timber.d(tag, "loadAPIData: calling api.")
         getApiCallingFunction(getApiRequest()).observe(this, observeResponseFromApi)
     }
 
@@ -81,9 +105,13 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      * Function will display the loader according the need.
      */
     private fun showPageProgress() {
+        Timber.d(tag, "showPageProgress: ")
         goneErrorOnDisplay()
         getBody()?.gone()
-        if (getSwipeRefreshLayout()?.isRefreshing == true) return
+        if (getSwipeRefreshLayout()?.isRefreshing == true) {
+            Timber.d(tag, "showPageProgress: swipeRefreshLayout is refreshing")
+            return
+        }
         getCenterProgressBar()?.show()
     }
 
@@ -91,27 +119,40 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
      * Function will hide the loader according the need.
      */
     private fun gonePageProgress() {
+        Timber.d(tag, "gonePageProgress: ")
         getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }
         getCenterProgressBar()?.gone()
         getBody()?.show()
     }
 
     private fun showErrorOnDisplay(error: String) {
-        if (error.isBlank()) return
+        Timber.d(tag, "showErrorOnDisplay: ")
+        if (error.isBlank()) {
+            Timber.d(tag, "showErrorOnDisplay: error is empty.")
+            return
+        }
         getErrorTextView()?.show()
         getErrorTextView()?.text = error
         getErrorView()?.show()
-        if (getErrorTextView() == null) toast(error)
+        if (getErrorTextView() == null) {
+            Timber.d(tag, "showErrorOnDisplay: errorTextView is null, showing error toast.")
+            toast(error)
+        }
     }
 
     private fun goneErrorOnDisplay() {
+        Timber.d(tag, "goneErrorOnDisplay: ")
         getErrorTextView()?.gone()
         getErrorTextView()?.text = ""
         getErrorView()?.gone()
     }
 
     override fun onDestroy() {
-        if (apiCallingStatus == LOADING) apiCallingStatus = INIT
+        Timber.d(tag, "onDestroy: ")
+        if (apiCallingStatus == LOADING) {
+            Timber.d(tag, "onDestroy: api is still loading, resetting to $INIT")
+            apiCallingStatus = INIT
+        }
         super.onDestroy()
     }
 }
