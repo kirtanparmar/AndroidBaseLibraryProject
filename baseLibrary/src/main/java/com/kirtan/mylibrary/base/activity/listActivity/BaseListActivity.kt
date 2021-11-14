@@ -14,9 +14,12 @@ import com.kirtan.mylibrary.base.dataHolder.Operation
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.show
 import com.kirtan.mylibrary.utils.toast
+import timber.log.Timber
 
 abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject> :
     BaseActivity<Screen>(), ListScreen<ModelType> {
+    override val tag: String
+        get() = "BaseListActivity"
     private val listViewModel: ListViewModel<ModelType> by viewModels()
     private val viewModelList get() = listViewModel.models
     private var copyToViewModelList: Boolean
@@ -119,6 +122,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.d(tag, "onCreate: ")
         setRv()
         setSwipeRefresh()
     }
@@ -127,6 +131,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      * RecyclerView setup
      */
     private fun setRv() {
+        Timber.d(tag, "setRv: ")
         getRecyclerView().layoutManager = layoutManager
         getRecyclerView().adapter = adapter
         copyToViewModelList = false
@@ -141,6 +146,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      * You can call this function if you have passed center aligned progressbar in getCenterProgressBar function.
      */
     protected open fun showPageProgress() {
+        Timber.d(tag, "showPageProgress: ")
         getCenterProgressBar()?.show()
     }
 
@@ -149,6 +155,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      * You can call this function if you have passed center aligned progressbar in getCenterProgressBar function.
      */
     protected open fun gonePageProgress() {
+        Timber.d(tag, "gonePageProgress: ")
         getCenterProgressBar()?.gone()
     }
 
@@ -156,9 +163,15 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      * To show the error message on the display if you want.
      */
     protected open fun showErrorOnDisplay(text: String) {
-        if (text.isBlank()) return
-        if (getErrorTextView() == null) toast(text)
-        else getErrorTextView()?.apply {
+        Timber.d(tag, "showErrorOnDisplay: ")
+        if (text.isBlank()) {
+            Timber.d(tag, "showErrorOnDisplay: error is empty.")
+            return
+        }
+        if (getErrorTextView() == null) {
+            Timber.d(tag, "showErrorOnDisplay: error textview is null, showing error toast.")
+            toast(text)
+        } else getErrorTextView()?.apply {
             setText(text)
             show()
         }
@@ -168,6 +181,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      * To hide the error message on the display if you want.
      */
     protected open fun hideErrorOnDisplay() {
+        Timber.d(tag, "hideErrorOnDisplay: ")
         getErrorTextView()?.gone()
     }
 
@@ -175,7 +189,9 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
      * Set the swipe refresh layout you can override this function if you want to do some more task.
      */
     protected open fun setSwipeRefresh() {
+        Timber.d(tag, "setSwipeRefresh: ")
         getSwipeRefreshLayout()?.setOnRefreshListener {
+            Timber.d(tag, "setOnRefreshListener: refreshing page.")
             hideErrorOnDisplay()
             models.clear()
             setRv()
