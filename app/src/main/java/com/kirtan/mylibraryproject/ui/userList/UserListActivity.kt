@@ -37,17 +37,13 @@ class UserListActivity :
             emit(apiCalling)
         }
 
-
-    override fun parseListFromResponse(response: UserListResponse): LiveData<ListParsedResponse<User>> =
-        liveData(Dispatchers.Default) {
-            if (response.users.isNotEmpty()) emit(
-                ListParsedResponse(
-                    isSuccess = true,
-                    apiListData = response.users
-                )
+    override fun parseListFromResponse(response: UserListResponse): ListParsedResponse<User> =
+        if (response.users.isNotEmpty())
+            ListParsedResponse(
+                isSuccess = true,
+                apiListData = response.users
             )
-            else emit(ListParsedResponse(false, "$response"))
-        }
+        else ListParsedResponse(false, "$response")
 
     override fun createAdapter(): ListAdapter<User, *> =
         UserListAdapter() { model ->

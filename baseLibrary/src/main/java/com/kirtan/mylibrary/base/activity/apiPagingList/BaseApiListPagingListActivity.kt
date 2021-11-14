@@ -15,6 +15,10 @@ import com.kirtan.mylibrary.utils.PagingListModel
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
 import com.kirtan.mylibrary.utils.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType : PagingListModel, ApiRequestType : Any?, ApiResponseType> :
@@ -124,16 +128,19 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         apiResponse.observe(this) { responseBody ->
             if (!apiCallingViewModel.dataFed) {
                 apiCallingViewModel.dataFed = true
-                parseListFromResponse(responseBody).observe(this) { parsedResponse ->
+                CoroutineScope(Dispatchers.Default).launch {
+                    val parsedResponse = parseListFromResponse(responseBody)
                     if (parsedResponse.isSuccess) {
                         totalItems = parsedResponse.newTotalItemCount
                         page++
-                        getRecyclerView().post {
-                            models.addAll(parsedResponse.newPageData) {
-                                getRecyclerView().post { calculateForListingNewItems() }
+                        withContext(Dispatchers.Main) {
+                            getRecyclerView().post {
+                                models.addAll(parsedResponse.newPageData) {
+                                    getRecyclerView().post { calculateForListingNewItems() }
+                                }
                             }
                         }
-                    } else showErrorOnDisplay(parsedResponse.errorMessage)
+                    } else withContext(Dispatchers.Main) { showErrorOnDisplay(parsedResponse.errorMessage) }
                 }
             }
         }
@@ -169,17 +176,11 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         }
     }
 
-    /**
-     * Function set the swipeRefreshLayout.
-     */
-    override fun setSwipeRefresh() {
-        getSwipeRefreshLayout()?.setOnRefreshListener {
-            getErrorTextView()?.gone()
-            page = firstPage
-            models.clear {
-                dataLoading = true
-                loadPage()
-            }
+    override fun onSwipeRefreshDoExtra() {
+        page = firstPage
+        models.clear {
+            dataLoading = true
+            loadPage()
         }
     }
 }

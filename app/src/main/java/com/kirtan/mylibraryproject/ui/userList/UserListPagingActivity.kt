@@ -38,18 +38,14 @@ class UserListPagingActivity :
             emit(apiCalling)
         }
 
-
-    override fun parseListFromResponse(response: UserListResponse): LiveData<PageListParsedResponse<User>> =
-        liveData(Dispatchers.Default) {
-            if (response.users.isNotEmpty()) emit(
-                PageListParsedResponse(
-                    isSuccess = true,
-                    newTotalItemCount = response.total,
-                    newPageData = response.users
-                )
+    override fun parseListFromResponse(response: UserListResponse): PageListParsedResponse<User> =
+        if (response.users.isNotEmpty())
+            PageListParsedResponse(
+                isSuccess = true,
+                newTotalItemCount = response.total,
+                newPageData = response.users
             )
-            else emit(PageListParsedResponse<User>(false, "$response"))
-        }
+        else PageListParsedResponse<User>(false, "$response")
 
     override fun createAdapter(): ListAdapter<User, *> =
         UserListAdapter() { model ->

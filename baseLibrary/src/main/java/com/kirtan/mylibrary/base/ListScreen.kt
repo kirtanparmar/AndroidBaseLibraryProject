@@ -33,4 +33,6 @@ interface ListScreen<ModelType> {
      * @return should be the swipe refresh view if you are using any in your layout file else null.
      */
     fun getSwipeRefreshLayout(): SwipeRefreshLayout?
+
+    fun onSwipeRefreshDoExtra()
 }

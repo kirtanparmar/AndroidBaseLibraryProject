@@ -188,12 +188,13 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
     /**
      * Set the swipe refresh layout you can override this function if you want to do some more task.
      */
-    protected open fun setSwipeRefresh() {
+    private fun setSwipeRefresh() {
         Timber.d(tag, "setSwipeRefresh: ")
         getSwipeRefreshLayout()?.setOnRefreshListener {
             Timber.d(tag, "setOnRefreshListener: refreshing page.")
             hideErrorOnDisplay()
             models.clear()
+            onSwipeRefreshDoExtra()
             setRv()
         }
     }
