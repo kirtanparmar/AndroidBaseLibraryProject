@@ -96,9 +96,9 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
      */
     override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this@BaseApiListActivity) { responseBody ->
-            if (apiListViewModel.status == DataNotParsed) {
-                apiListViewModel.status = DataParsing
-                CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(Dispatchers.Default).launch {
+                if (apiListViewModel.status == DataNotParsed) {
+                    apiListViewModel.status = DataParsing
                     val parsedResponse = parseListFromResponse(responseBody)
                     apiListViewModel.status = DataParsed
                     if (parsedResponse.isSuccess) {
