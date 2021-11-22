@@ -19,11 +19,17 @@ class ApiCallingViewModel<ApiResponseType> : ViewModel() {
 
     enum class ApiStatus { INIT, COMPLETE, LOADING }
 
-    private val apiResponse: MutableLiveData<Response<ApiResponseType>?> = MutableLiveData()
+    private val apiResponse: MutableLiveData<Response<ApiResponseType>?> =
+        object : MutableLiveData<Response<ApiResponseType>?>() {
+            override fun setValue(value: Response<ApiResponseType>?) {
+                super.setValue(value)
+                status.value = ApiStatus.COMPLETE
+                Timber.d("$value")
+            }
+        }
+
     fun getApiResponse(): LiveData<Response<ApiResponseType>?> = apiResponse
     fun setApiResponse(apiResponse: Response<ApiResponseType>?) {
         this.apiResponse.value = apiResponse
-        status.value = ApiStatus.COMPLETE
-        Timber.d("$apiResponse")
     }
 }

@@ -86,7 +86,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
      * Function loads the data from api and calls the #observeApiResponse function on success.
      */
     private fun loadPage() {
-        if (apiCallingStatus == LOADING) return
+        if (apiCallingStatus != INIT) return
         apiCallingStatus = LOADING
         getApiCallingFunction(getApiRequest()).observe(this, observeResponseFromApi)
     }
@@ -127,10 +127,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
      * Function will hide the loader according the need.
      */
     override fun gonePageProgress() {
-        if (getSwipeRefreshLayout()?.isRefreshing == true) {
-            getSwipeRefreshLayout()?.isRefreshing = false
-            return
-        }
+        getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }
         super.gonePageProgress()
     }
 
