@@ -34,10 +34,10 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     private val dataLoaderModel by lazy { getLoaderDataModel() }
 
     private val pagingViewModel: PagingViewModel by viewModels()
-    private var totalItems: Int
-        get() = pagingViewModel.totalItems
+    private var totalPagination: Int
+        get() = pagingViewModel.paginationInfo.total
         set(value) {
-            pagingViewModel.totalItems = value
+            pagingViewModel.paginationInfo.total = value
         }
     private var dataLoading: Boolean
         get() = pagingViewModel.dataLoading
@@ -86,9 +86,16 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
             val firstVisibleItemIndex =
                 (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             if ((visibleItemCount + firstVisibleItemIndex) >= totalItemCount) {
-                if (adapter.itemCount < totalItems && !dataLoading) {
-                    dataLoading = true
-                    loadPage()
+                if (pagingViewModel.paginationInfo.paginationOn == PaginationOn.ITEM_COUNT) {
+                    if (adapter.itemCount < totalPagination && !dataLoading) {
+                        dataLoading = true
+                        loadPage()
+                    }
+                } else if (pagingViewModel.paginationInfo.paginationOn == PaginationOn.PAGE) {
+                    if (page <= totalPagination && !dataLoading) {
+                        dataLoading = true
+                        loadPage()
+                    }
                 }
             }
         }
@@ -131,7 +138,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                 CoroutineScope(Dispatchers.Default).launch {
                     val parsedResponse = parseListFromResponse(responseBody)
                     if (parsedResponse.isSuccess) {
-                        totalItems = parsedResponse.newTotalItemCount
+                        totalPagination = parsedResponse.newTotalPagination
                         page++
                         withContext(Dispatchers.Main) {
                             getRecyclerView().post {

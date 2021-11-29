@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
 import com.kirtan.mylibrary.base.activity.apiPagingList.BaseApiListPagingListActivity
+import com.kirtan.mylibrary.base.activity.apiPagingList.PaginationOn
 import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.apis.Apis
@@ -42,10 +43,10 @@ class UserListPagingActivity :
         if (response.users.isNotEmpty())
             PageListParsedResponse(
                 isSuccess = true,
-                newTotalItemCount = response.total,
+                newTotalPagination = response.total,
                 newPageData = response.users
             )
-        else PageListParsedResponse<User>(false, "$response")
+        else PageListParsedResponse(false, "$response")
 
     override fun createAdapter(): ListAdapter<User, *> =
         UserListAdapter() { model ->
@@ -62,4 +63,5 @@ class UserListPagingActivity :
     override fun getBody(): View? = null
     override val emptyObjectForNullAssertion: User = User()
     override fun getErrorView(): View? = null
+    override fun getPaginationType(): PaginationOn = PaginationOn.ITEM_COUNT
 }
