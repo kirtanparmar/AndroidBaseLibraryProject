@@ -52,5 +52,5 @@ abstract class BaseActivity<Screen : ViewDataBinding> : AppCompatActivity() {
      * @param bundle contains the data passed from another @activity.
      * @return true if the bundle value is valid. You have to pass true if there is no need for the bundle in this activity.
      */
-    protected abstract fun storeBundleValueIfNeeded(bundle: Bundle): Boolean
+    protected open fun storeBundleValueIfNeeded(bundle: Bundle): Boolean = true
 }
