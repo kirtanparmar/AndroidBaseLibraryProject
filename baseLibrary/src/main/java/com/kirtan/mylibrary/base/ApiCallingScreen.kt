@@ -18,7 +18,7 @@ interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
      * @param apiRequest created apiRequest is automatically passed which you have created.
      * @return Provide viewModel Api call function, which will bw used for auto calling api by this class @function @loadAPIData.
      * */
-    fun getApiCallingFunction(apiRequest: ApiRequestType): LiveData<Response<ApiResponse>?>
+    suspend fun getApiCallingFunction(apiRequest: ApiRequestType): Response<ApiResponse>?
 
     /**
      * @return Type of the request which you are going to pass in the request body.

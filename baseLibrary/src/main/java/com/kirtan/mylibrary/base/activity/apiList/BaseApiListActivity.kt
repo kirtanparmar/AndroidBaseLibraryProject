@@ -9,7 +9,6 @@ import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.activity.listActivity.BaseListActivity
 import com.kirtan.mylibrary.base.dataHolder.BaseObject
-import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel.ApiStatus
 import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel.ApiStatus.*
 import com.kirtan.mylibrary.base.viewModels.ApiListViewModel
@@ -31,12 +30,11 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     /**
      * This viewModel is auto implemented, no need to override this viewModel.
      */
-    override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
-    private val apiListViewModel: ApiListViewModel by viewModels()
+    override val apiCallingViewModel: ApiListViewModel<ApiResponseType> by viewModels()
     private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
             INIT -> {
-                apiListViewModel.status = DataNotParsed
+                apiCallingViewModel.dataStatus = DataNotParsed
                 loadPage()
             }
             LOADING -> showPageProgress()
@@ -44,8 +42,6 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
             else -> apiCallingStatus = INIT
         }
     }
-    private val observeResponseFromApi: Observer<Response<ApiResponseType>?> =
-        Observer { apiResponse -> apiCallingViewModel.setApiResponse(apiResponse) }
     private val observeResponseStoredIntoLocal: Observer<Response<ApiResponseType>?> =
         Observer { response ->
             Timber.d("$response")
@@ -67,9 +63,9 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
             }
         }
     private var apiCallingStatus: ApiStatus?
-        get() = apiCallingViewModel.status.value
+        get() = apiCallingViewModel.apiStatus.value
         set(value) {
-            apiCallingViewModel.status.value = value
+            apiCallingViewModel.apiStatus.value = value
         }
 
     /**
@@ -77,7 +73,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        apiCallingViewModel.status.observe(this, apiStatusObserver)
+        apiCallingViewModel.apiStatus.observe(this, apiStatusObserver)
         apiCallingViewModel.getApiResponse().observe(this, observeResponseStoredIntoLocal)
         observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
@@ -88,7 +84,10 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     private fun loadPage() {
         if (apiCallingStatus != INIT) return
         apiCallingStatus = LOADING
-        getApiCallingFunction(getApiRequest()).observe(this, observeResponseFromApi)
+        CoroutineScope(Dispatchers.IO).launch {
+            val apiResponse = getApiCallingFunction(getApiRequest())
+            withContext(Dispatchers.Main) { apiCallingViewModel.setApiResponse(apiResponse) }
+        }
     }
 
     /**
@@ -97,10 +96,10 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this@BaseApiListActivity) { responseBody ->
             CoroutineScope(Dispatchers.Default).launch {
-                if (apiListViewModel.status == DataNotParsed) {
-                    apiListViewModel.status = DataParsing
+                if (apiCallingViewModel.dataStatus == DataNotParsed) {
+                    apiCallingViewModel.dataStatus = DataParsing
                     val parsedResponse = parseListFromResponse(responseBody)
-                    apiListViewModel.status = DataParsed
+                    apiCallingViewModel.dataStatus = DataParsed
                     if (parsedResponse.isSuccess) {
                         Timber.d("API Data Loaded : Success")
                         withContext(Dispatchers.Main) {

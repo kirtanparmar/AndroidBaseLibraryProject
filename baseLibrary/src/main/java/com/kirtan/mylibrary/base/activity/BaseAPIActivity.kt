@@ -11,6 +11,10 @@ import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel.ApiStatus.*
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.show
 import com.kirtan.mylibrary.utils.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import timber.log.Timber
 
@@ -40,11 +44,6 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
             }
         }
     }
-    private val observeResponseFromApi: Observer<Response<ApiResponseType>?> =
-        Observer { apiResponse ->
-            Timber.d(tag, "observeResponseFromApi: $apiResponse")
-            apiCallingViewModel.setApiResponse(apiResponse)
-        }
     private val observeResponseStoredIntoLocal: Observer<Response<ApiResponseType>?> =
         Observer { response ->
             Timber.d(tag, "observeResponseStoredIntoLocal: $response")
@@ -67,9 +66,9 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         }
 
     private var apiCallingStatus: ApiCallingViewModel.ApiStatus?
-        get() = apiCallingViewModel.status.value
+        get() = apiCallingViewModel.apiStatus.value
         set(value) {
-            apiCallingViewModel.status.value = value
+            apiCallingViewModel.apiStatus.value = value
         }
 
     /**
@@ -82,7 +81,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
             Timber.d(tag, "setOnRefreshListener: refreshing page.")
             apiCallingStatus = INIT
         }
-        apiCallingViewModel.status.observe(this, apiStatusObserver)
+        apiCallingViewModel.apiStatus.observe(this, apiStatusObserver)
         apiCallingViewModel.getApiResponse().observe(this, observeResponseStoredIntoLocal)
         observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
@@ -98,7 +97,10 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         }
         apiCallingStatus = LOADING
         Timber.d(tag, "loadAPIData: calling api.")
-        getApiCallingFunction(getApiRequest()).observe(this, observeResponseFromApi)
+        CoroutineScope(Dispatchers.IO).launch {
+            val apiResponse = getApiCallingFunction(getApiRequest())
+            withContext(Dispatchers.Main) { apiCallingViewModel.setApiResponse(apiResponse) }
+        }
     }
 
     /**

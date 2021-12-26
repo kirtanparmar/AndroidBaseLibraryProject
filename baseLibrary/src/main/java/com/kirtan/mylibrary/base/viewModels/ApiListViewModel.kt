@@ -1,9 +1,7 @@
 package com.kirtan.mylibrary.base.viewModels
 
-import androidx.lifecycle.ViewModel
-
-class ApiListViewModel : ViewModel() {
-    var status: Status = Status.DataNotParsed
+class ApiListViewModel<ApiResponseType> : ApiCallingViewModel<ApiResponseType>() {
+    var dataStatus: Status = Status.DataNotParsed
 
     enum class Status { DataParsed, DataNotParsed, DataParsing }
 }

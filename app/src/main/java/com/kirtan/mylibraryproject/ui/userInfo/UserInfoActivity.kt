@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
 import com.kirtan.mylibrary.base.activity.BaseAPIActivity
@@ -13,17 +12,13 @@ import com.kirtan.mylibraryproject.apis.Apis
 import com.kirtan.mylibraryproject.apis.responseModels.userInfoResponse.UserInfoResponse
 import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User
 import com.kirtan.mylibraryproject.databinding.ActivityUserInfoBinding
-import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
 class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserInfoResponse>() {
     private var user: User = User()
 
-    override fun getApiCallingFunction(apiRequest: String): LiveData<Response<UserInfoResponse>?> =
-        liveData(Dispatchers.IO) {
-            val apiCalling = Apis.getInstance().getUserInfo(apiRequest)
-            emit(apiCalling)
-        }
+    override suspend fun getApiCallingFunction(apiRequest: String): Response<UserInfoResponse>? =
+        Apis.getInstance().getUserInfo(apiRequest)
 
     override fun getApiRequest(): String = user.id
 

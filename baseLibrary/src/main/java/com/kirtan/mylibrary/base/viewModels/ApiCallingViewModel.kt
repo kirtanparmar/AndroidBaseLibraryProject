@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import retrofit2.Response
 import timber.log.Timber
 
-class ApiCallingViewModel<ApiResponseType> : ViewModel() {
-    var status: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.INIT)
+open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
+    var apiStatus: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.INIT)
     var dataFed: Boolean = false
 
     private val responseData: MutableLiveData<ApiResponseType> = MutableLiveData()
@@ -23,7 +23,7 @@ class ApiCallingViewModel<ApiResponseType> : ViewModel() {
         object : MutableLiveData<Response<ApiResponseType>?>() {
             override fun setValue(value: Response<ApiResponseType>?) {
                 super.setValue(value)
-                status.value = ApiStatus.COMPLETE
+                apiStatus.value = ApiStatus.COMPLETE
                 Timber.d("$value")
             }
         }

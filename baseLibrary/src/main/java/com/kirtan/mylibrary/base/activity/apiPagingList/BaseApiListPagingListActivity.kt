@@ -10,7 +10,6 @@ import com.kirtan.mylibrary.R
 import com.kirtan.mylibrary.base.ApiListCallingScreen
 import com.kirtan.mylibrary.base.ListPagingScreen
 import com.kirtan.mylibrary.base.activity.listActivity.BaseListActivity
-import com.kirtan.mylibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.mylibrary.utils.PagingListModel
 import com.kirtan.mylibrary.utils.gone
 import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
@@ -25,29 +24,25 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     BaseListActivity<Screen, ModelType>(),
     ListPagingScreen<ModelType>,
     ApiListCallingScreen<ApiRequestType, ApiResponseType, PageListParsedResponse<ModelType>> {
-    /**
-     * This viewModel is auto implemented, no need to override this viewModel.
-     */
-    override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
 
     private val firstPage: Int get() = getFirstPagePosition()
     private val dataLoaderModel by lazy { getLoaderDataModel() }
 
-    private val pagingViewModel: PagingViewModel by viewModels()
+    override val apiCallingViewModel: ApiPagingViewModel<ApiResponseType> by viewModels()
     private var totalPagination: Int
-        get() = pagingViewModel.paginationInfo.total
+        get() = apiCallingViewModel.paginationInfo.total
         set(value) {
-            pagingViewModel.paginationInfo.total = value
+            apiCallingViewModel.paginationInfo.total = value
         }
     private var dataLoading: Boolean
-        get() = pagingViewModel.dataLoading
+        get() = apiCallingViewModel.dataLoading
         set(value) {
-            pagingViewModel.dataLoading = value
+            apiCallingViewModel.dataLoading = value
         }
     private var page: Int
-        get() = pagingViewModel.page
+        get() = apiCallingViewModel.page
         set(value) {
-            pagingViewModel.page = value
+            apiCallingViewModel.page = value
         }
 
     /**
@@ -86,12 +81,12 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
             val firstVisibleItemIndex =
                 (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             if ((visibleItemCount + firstVisibleItemIndex) >= totalItemCount) {
-                if (pagingViewModel.paginationInfo.paginationOn == PaginationOn.ITEM_COUNT) {
+                if (apiCallingViewModel.paginationInfo.paginationOn == PaginationOn.ITEM_COUNT) {
                     if (adapter.itemCount < totalPagination && !dataLoading) {
                         dataLoading = true
                         loadPage()
                     }
-                } else if (pagingViewModel.paginationInfo.paginationOn == PaginationOn.PAGE) {
+                } else if (apiCallingViewModel.paginationInfo.paginationOn == PaginationOn.PAGE) {
                     if (page <= totalPagination && !dataLoading) {
                         dataLoading = true
                         loadPage()
@@ -104,23 +99,24 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     private fun loadPage() {
         if (models.size > 0) getRecyclerView().post { models.add(getLoaderDataModel()) }
         showPageProgress()
-        getApiCallingFunction(getApiRequest()).observe(this) { response ->
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = getApiCallingFunction(getApiRequest())
             Timber.d("$response")
             dataLoading = false
             if (models.size > 0) getRecyclerView().post { models.removeAt(models.size - 1) }
             gonePageProgress()
             if (response == null) {
                 toast(getString(R.string.server_unreachable))
-                return@observe
+                return@launch
             }
             if (response.isSuccessful) {
                 Timber.d("${response.body()}")
                 val body = response.body()
                 if (body == null) {
                     toast(response.message())
-                    return@observe
+                    return@launch
                 }
-                apiCallingViewModel.setResponseData(body)
+                withContext(Dispatchers.Main) { apiCallingViewModel.setResponseData(body) }
             } else {
                 Timber.d("${response.code()} ${response.message()}")
                 toast(response.message())
@@ -165,10 +161,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
      * Function should not be overridden.
      */
     override fun gonePageProgress() {
-        if (getSwipeRefreshLayout()?.isRefreshing == true) {
-            getSwipeRefreshLayout()?.isRefreshing = false
-            return
-        }
+        getSwipeRefreshLayout()?.isRefreshing = false
         super.gonePageProgress()
     }
 

@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +18,6 @@ import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User
 import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.UserListResponse
 import com.kirtan.mylibraryproject.databinding.ActivityUserListBinding
 import com.kirtan.mylibraryproject.ui.userInfo.UserInfoActivity
-import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
 class UserListPagingActivity :
@@ -33,11 +30,8 @@ class UserListPagingActivity :
     override val getLayout: Int get() = R.layout.activity_user_list
     override fun storeBundleValueIfNeeded(bundle: Bundle) = true
 
-    override fun getApiCallingFunction(apiRequest: Int): LiveData<Response<UserListResponse>?> =
-        liveData(Dispatchers.IO) {
-            val apiCalling = Apis.getInstance().getUsers(page = apiRequest)
-            emit(apiCalling)
-        }
+    override suspend fun getApiCallingFunction(apiRequest: Int): Response<UserListResponse>? =
+        Apis.getInstance().getUsers(page = apiRequest)
 
     override fun parseListFromResponse(response: UserListResponse): PageListParsedResponse<User> =
         if (response.users.isNotEmpty())
