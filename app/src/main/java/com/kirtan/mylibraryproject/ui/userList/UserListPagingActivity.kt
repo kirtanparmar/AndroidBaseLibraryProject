@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
-import com.kirtan.mylibrary.base.activity.apiPagingList.BaseApiListPagingListActivity
-import com.kirtan.mylibrary.base.activity.apiPagingList.PaginationOn
-import com.kirtan.mylibrary.utils.parsedResponseForList.PageListParsedResponse
+import com.kirtan.baseLibrary.base.activity.apiPagingList.BaseApiListPagingListActivity
+import com.kirtan.baseLibrary.base.activity.apiPagingList.PaginationOn
+import com.kirtan.baseLibrary.utils.parsedResponseForList.PageListParsedResponse
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.apis.Apis
 import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User

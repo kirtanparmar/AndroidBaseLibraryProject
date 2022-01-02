@@ -2,7 +2,7 @@ package com.kirtan.mylibraryproject.ui.menu
 
 import android.content.Intent
 import android.os.Bundle
-import com.kirtan.mylibrary.base.activity.BaseActivity
+import com.kirtan.baseLibrary.base.activity.BaseActivity
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.databinding.ActivityMenuBinding
 import com.kirtan.mylibraryproject.ui.userList.UserListActivity

@@ -6,7 +6,7 @@ import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
-import com.kirtan.mylibrary.base.activity.BaseAPIActivity
+import com.kirtan.baseLibrary.base.activity.BaseAPIActivity
 import com.kirtan.mylibraryproject.R
 import com.kirtan.mylibraryproject.apis.Apis
 import com.kirtan.mylibraryproject.apis.responseModels.userInfoResponse.UserInfoResponse
