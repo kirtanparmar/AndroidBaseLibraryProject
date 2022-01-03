@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User" />
+            type="com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

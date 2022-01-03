@@ -1,12 +1,12 @@
-package com.kirtan.mylibraryproject.ui.menu
+package com.kirtan.baseLibrarySample.ui.menu
 
 import android.content.Intent
 import android.os.Bundle
 import com.kirtan.baseLibrary.base.activity.BaseActivity
-import com.kirtan.mylibraryproject.R
-import com.kirtan.mylibraryproject.databinding.ActivityMenuBinding
-import com.kirtan.mylibraryproject.ui.userList.UserListActivity
-import com.kirtan.mylibraryproject.ui.userList.UserListPagingActivity
+import com.kirtan.baseLibrarySample.R
+import com.kirtan.baseLibrarySample.databinding.ActivityMenuBinding
+import com.kirtan.baseLibrarySample.ui.userList.UserListActivity
+import com.kirtan.baseLibrarySample.ui.userList.UserListPagingActivity
 
 class MenuActivity : BaseActivity<ActivityMenuBinding>() {
     override val getLayout: Int

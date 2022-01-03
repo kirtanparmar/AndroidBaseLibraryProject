@@ -1,8 +1,8 @@
-package com.kirtan.mylibraryproject.apis
+package com.kirtan.baseLibrarySample.apis
 
 import com.google.gson.GsonBuilder
-import com.kirtan.mylibraryproject.App
-import com.kirtan.mylibraryproject.utils.Constants
+import com.kirtan.baseLibrarySample.App
+import com.kirtan.baseLibrarySample.utils.Constants
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

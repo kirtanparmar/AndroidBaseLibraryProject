@@ -1,4 +1,4 @@
-package com.kirtan.mylibraryproject
+package com.kirtan.baseLibrarySample
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

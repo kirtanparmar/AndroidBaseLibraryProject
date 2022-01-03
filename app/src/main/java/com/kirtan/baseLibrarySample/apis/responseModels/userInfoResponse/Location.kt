@@ -1,4 +1,4 @@
-package com.kirtan.mylibraryproject.apis.responseModels.userInfoResponse
+package com.kirtan.baseLibrarySample.apis.responseModels.userInfoResponse
 
 import com.google.gson.annotations.SerializedName
 

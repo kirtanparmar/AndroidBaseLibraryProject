@@ -1,4 +1,4 @@
-package com.kirtan.mylibraryproject.utils
+package com.kirtan.baseLibrarySample.utils
 
 object Constants {
     const val CustomErrorCode: Int = 600

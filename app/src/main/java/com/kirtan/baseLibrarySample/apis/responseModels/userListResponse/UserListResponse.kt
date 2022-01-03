@@ -1,6 +1,7 @@
-package com.kirtan.mylibraryproject.apis.responseModels.userListResponse
+package com.kirtan.baseLibrarySample.apis.responseModels.userListResponse
 
 import com.google.gson.annotations.SerializedName
+import com.kirtan.baseLibrary.base.activity.apiPagingList.PagingApiResponse
 
 data class UserListResponse(
     @SerializedName("data")
@@ -11,4 +12,4 @@ data class UserListResponse(
     var page: Int = 0,
     @SerializedName("limit")
     var limit: Int = 0,
-)
+) : PagingApiResponse()

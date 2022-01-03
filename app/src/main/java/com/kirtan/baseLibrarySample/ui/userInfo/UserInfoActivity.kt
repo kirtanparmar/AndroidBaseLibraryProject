@@ -1,4 +1,4 @@
-package com.kirtan.mylibraryproject.ui.userInfo
+package com.kirtan.baseLibrarySample.ui.userInfo
 
 import android.os.Bundle
 import android.view.View
@@ -7,11 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
 import com.kirtan.baseLibrary.base.activity.BaseAPIActivity
-import com.kirtan.mylibraryproject.R
-import com.kirtan.mylibraryproject.apis.Apis
-import com.kirtan.mylibraryproject.apis.responseModels.userInfoResponse.UserInfoResponse
-import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User
-import com.kirtan.mylibraryproject.databinding.ActivityUserInfoBinding
+import com.kirtan.baseLibrarySample.R
+import com.kirtan.baseLibrarySample.apis.Apis
+import com.kirtan.baseLibrarySample.apis.responseModels.userInfoResponse.UserInfoResponse
+import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User
+import com.kirtan.baseLibrarySample.databinding.ActivityUserInfoBinding
 import retrofit2.Response
 
 class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserInfoResponse>() {

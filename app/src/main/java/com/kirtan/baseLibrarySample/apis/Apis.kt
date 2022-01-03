@@ -1,7 +1,7 @@
-package com.kirtan.mylibraryproject.apis
+package com.kirtan.baseLibrarySample.apis
 
-import com.kirtan.mylibraryproject.apis.responseModels.userInfoResponse.UserInfoResponse
-import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.UserListResponse
+import com.kirtan.baseLibrarySample.apis.responseModels.userInfoResponse.UserInfoResponse
+import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.UserListResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

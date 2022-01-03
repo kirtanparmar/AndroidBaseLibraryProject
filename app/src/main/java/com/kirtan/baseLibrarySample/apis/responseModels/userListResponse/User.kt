@@ -1,4 +1,4 @@
-package com.kirtan.mylibraryproject.apis.responseModels.userListResponse
+package com.kirtan.baseLibrarySample.apis.responseModels.userListResponse
 
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kirtan.mylibraryproject">
+    package="com.kirtan.baseLibrarySample">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyLibraryProject">
         <activity
-            android:name=".ui.menu.MenuActivity"
+            android:name="com.kirtan.baseLibrarySample.ui.menu.MenuActivity"
             android:exported="true"
             android:theme="@style/Theme.MyLibraryProject.NoActionBar">
             <intent-filter>
@@ -22,15 +22,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.userList.UserListPagingActivity"
+            android:name="com.kirtan.baseLibrarySample.ui.userList.UserListPagingActivity"
             android:exported="true"
             android:theme="@style/Theme.MyLibraryProject.NoActionBar" />
         <activity
-            android:name=".ui.userInfo.UserInfoActivity"
+            android:name="com.kirtan.baseLibrarySample.ui.userInfo.UserInfoActivity"
             android:exported="true"
             android:theme="@style/Theme.MyLibraryProject.NoActionBar" />
         <activity
-            android:name=".ui.userList.UserListActivity"
+            android:name="com.kirtan.baseLibrarySample.ui.userList.UserListActivity"
             android:exported="true"
             android:theme="@style/Theme.MyLibraryProject.NoActionBar" />
     </application>

@@ -1,10 +1,10 @@
-package com.kirtan.mylibraryproject.ui.userList
+package com.kirtan.baseLibrarySample.ui.userList
 
 import com.bumptech.glide.Glide
 import com.kirtan.baseLibrary.base.BaseAdapter
-import com.kirtan.mylibraryproject.R
-import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User
-import com.kirtan.mylibraryproject.databinding.ItemHomeListBinding
+import com.kirtan.baseLibrarySample.R
+import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User
+import com.kirtan.baseLibrarySample.databinding.ItemHomeListBinding
 
 class UserListAdapter(private val callback: (model: User) -> Unit) :
     BaseAdapter<ItemHomeListBinding, User, UserListAdapter.HomeListViewHolder>(

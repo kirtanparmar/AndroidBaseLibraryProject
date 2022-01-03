@@ -1,4 +1,4 @@
-package com.kirtan.mylibraryproject.ui.userList
+package com.kirtan.baseLibrarySample.ui.userList
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,12 +12,12 @@ import com.google.android.material.textview.MaterialTextView
 import com.kirtan.baseLibrary.base.activity.apiPagingList.BaseApiListPagingListActivity
 import com.kirtan.baseLibrary.base.activity.apiPagingList.PaginationOn
 import com.kirtan.baseLibrary.utils.parsedResponseForList.PageListParsedResponse
-import com.kirtan.mylibraryproject.R
-import com.kirtan.mylibraryproject.apis.Apis
-import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.User
-import com.kirtan.mylibraryproject.apis.responseModels.userListResponse.UserListResponse
-import com.kirtan.mylibraryproject.databinding.ActivityUserListBinding
-import com.kirtan.mylibraryproject.ui.userInfo.UserInfoActivity
+import com.kirtan.baseLibrarySample.R
+import com.kirtan.baseLibrarySample.apis.Apis
+import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User
+import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.UserListResponse
+import com.kirtan.baseLibrarySample.databinding.ActivityUserListBinding
+import com.kirtan.baseLibrarySample.ui.userInfo.UserInfoActivity
 import retrofit2.Response
 
 class UserListPagingActivity :

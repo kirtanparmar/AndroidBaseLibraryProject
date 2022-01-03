@@ -67,6 +67,11 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
         set(value) {
             apiCallingViewModel.apiStatus.value = value
         }
+    private var dataStatus: ApiListViewModel.Status
+        get() = apiCallingViewModel.dataStatus
+        set(value) {
+            apiCallingViewModel.dataStatus = value
+        }
 
     /**
      * This function will auto load api data, you only have to parse the response.
@@ -93,13 +98,13 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     /**
      * Function will observe the api response and will request for parsing the response into the list of models to be listed in the list screen.
      */
-    override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
+    final override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this@BaseApiListActivity) { responseBody ->
             CoroutineScope(Dispatchers.Default).launch {
-                if (apiCallingViewModel.dataStatus == DataNotParsed) {
-                    apiCallingViewModel.dataStatus = DataParsing
+                if (dataStatus == DataNotParsed) {
+                    dataStatus = DataParsing
                     val parsedResponse = parseListFromResponse(responseBody)
-                    apiCallingViewModel.dataStatus = DataParsed
+                    dataStatus = DataParsed
                     if (parsedResponse.isSuccess) {
                         Timber.d("API Data Loaded : Success")
                         withContext(Dispatchers.Main) {

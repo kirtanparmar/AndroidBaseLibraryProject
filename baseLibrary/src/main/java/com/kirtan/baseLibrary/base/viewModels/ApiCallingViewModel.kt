@@ -3,17 +3,19 @@ package com.kirtan.baseLibrary.base.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import timber.log.Timber
 
 open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
     var apiStatus: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.INIT)
-    var dataFed: Boolean = false
 
     private val responseData: MutableLiveData<ApiResponseType> = MutableLiveData()
     fun getResponseData(): LiveData<ApiResponseType> = responseData
     fun setResponseData(responseData: ApiResponseType) {
-        dataFed = false
         this.responseData.value = responseData
     }
 
@@ -31,5 +33,14 @@ open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
     fun getApiResponse(): LiveData<Response<ApiResponseType>?> = apiResponse
     fun setApiResponse(apiResponse: Response<ApiResponseType>?) {
         this.apiResponse.value = apiResponse
+    }
+
+    fun loadApi(api: suspend () -> Response<ApiResponseType>?) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val apiCall = api.invoke()
+                withContext(Dispatchers.Main) { setApiResponse(apiCall) }
+            }
+        }
     }
 }

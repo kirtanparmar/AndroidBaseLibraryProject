@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="com.kirtan.mylibraryproject.apis.responseModels.userInfoResponse.UserInfoResponse" />
+            type="com.kirtan.baseLibrarySample.apis.responseModels.userInfoResponse.UserInfoResponse" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

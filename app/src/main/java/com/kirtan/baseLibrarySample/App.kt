@@ -1,7 +1,7 @@
-package com.kirtan.mylibraryproject
+package com.kirtan.baseLibrarySample
 
 import android.app.Application
-import com.kirtan.mylibraryproject.apis.RetrofitHelper
+import com.kirtan.baseLibrarySample.apis.RetrofitHelper
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
