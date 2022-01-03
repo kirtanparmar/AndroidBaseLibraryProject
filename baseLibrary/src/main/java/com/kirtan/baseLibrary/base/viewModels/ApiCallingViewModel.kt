@@ -31,7 +31,7 @@ open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
         }
 
     fun getApiResponse(): LiveData<Response<ApiResponseType>?> = apiResponse
-    fun setApiResponse(apiResponse: Response<ApiResponseType>?) {
+    private fun setApiResponse(apiResponse: Response<ApiResponseType>?) {
         this.apiResponse.value = apiResponse
     }
 

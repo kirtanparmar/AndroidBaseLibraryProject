@@ -11,10 +11,6 @@ import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel.ApiStatus.*
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.show
 import com.kirtan.baseLibrary.utils.toast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 import timber.log.Timber
 
@@ -97,10 +93,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         }
         apiCallingStatus = LOADING
         Timber.d(tag, "loadAPIData: calling api.")
-        CoroutineScope(Dispatchers.IO).launch {
-            val apiResponse = getApiCallingFunction(getApiRequest())
-            withContext(Dispatchers.Main) { apiCallingViewModel.setApiResponse(apiResponse) }
-        }
+        apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 
     /**

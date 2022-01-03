@@ -89,10 +89,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     private fun loadPage() {
         if (apiCallingStatus != INIT) return
         apiCallingStatus = LOADING
-        CoroutineScope(Dispatchers.IO).launch {
-            val apiResponse = getApiCallingFunction(getApiRequest())
-            withContext(Dispatchers.Main) { apiCallingViewModel.setApiResponse(apiResponse) }
-        }
+        apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 
     /**
