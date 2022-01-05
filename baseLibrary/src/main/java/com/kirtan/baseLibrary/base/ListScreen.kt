@@ -1,10 +1,10 @@
 package com.kirtan.baseLibrary.base
 
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.textview.MaterialTextView
 
 interface ListScreen<ModelType> {
     /**
@@ -27,7 +27,7 @@ interface ListScreen<ModelType> {
     /**
      * @return should be the Textview you are using for displaying the error or any kind of the message. Or you can pass null if not using any.
      */
-    fun getErrorTextView(): MaterialTextView?
+    fun getErrorTextView(): TextView?
 
     /**
      * @return should be the swipe refresh view if you are using any in your layout file else null.

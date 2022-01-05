@@ -2,9 +2,9 @@ package com.kirtan.baseLibrary.base
 
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.textview.MaterialTextView
 import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel
 import retrofit2.Response
 
@@ -49,7 +49,7 @@ interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
      * This view is for displaying error message.
      * @return @MaterialTextView or @null.
      */
-    fun getErrorTextView(): MaterialTextView?
+    fun getErrorTextView(): TextView?
 
     /**
      * This view is for displaying error graphics.
