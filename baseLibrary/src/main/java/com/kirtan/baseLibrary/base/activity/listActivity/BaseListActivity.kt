@@ -28,16 +28,9 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
             listViewModel.copyToViewModelList = value
         }
 
-    /**
-     * Layout manager object. You've to override the value as you wish.
-     * #Note Only LinearLayoutManager object can be used for paging.
-     */
     abstract val layoutManager: RecyclerView.LayoutManager
     abstract val emptyObjectForNullAssertion: ModelType
 
-    /**
-     * This list contains the callbacks for the many functions in the arraylist.
-     */
     protected val models = object : BaseArrayList<ModelType>() {
         override fun listCleared(lastListSize: Int, callBack: (operation: Operation) -> Unit) {
             if (copyToViewModelList) {
@@ -111,15 +104,8 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
         override fun emptyObjectForNullAssertion(): ModelType = emptyObjectForNullAssertion
     }
 
-    /**
-     * You can access adapter though out the activity.
-     */
     protected val adapter: ListAdapter<ModelType, *> by lazy { createAdapter() }
 
-    /**
-     * This function will set the recyclerView and swipeRefreshView if needed.
-     * This function should be overridden if you have to do some extra work in this method.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d(tag, "onCreate: ")
@@ -127,9 +113,6 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
         setSwipeRefresh()
     }
 
-    /**
-     * RecyclerView setup
-     */
     private fun setRv() {
         Timber.d(tag, "setRv: ")
         getRecyclerView().layoutManager = layoutManager
@@ -141,27 +124,16 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
         adapter.submitList(models)
     }
 
-    /**
-     * Function will show the center progress bar.
-     * You can call this function if you have passed center aligned progressbar in getCenterProgressBar function.
-     */
     protected open fun showPageProgress() {
         Timber.d(tag, "showPageProgress: ")
         getCenterProgressBar()?.show()
     }
 
-    /**
-     * Function will hide the center progress bar.
-     * You can call this function if you have passed center aligned progressbar in getCenterProgressBar function.
-     */
     protected open fun gonePageProgress() {
         Timber.d(tag, "gonePageProgress: ")
         getCenterProgressBar()?.gone()
     }
 
-    /**
-     * To show the error message on the display if you want.
-     */
     protected open fun showErrorOnDisplay(text: String) {
         Timber.d(tag, "showErrorOnDisplay: ")
         if (text.isBlank()) {
@@ -177,17 +149,11 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
         }
     }
 
-    /**
-     * To hide the error message on the display if you want.
-     */
     protected open fun hideErrorOnDisplay() {
         Timber.d(tag, "hideErrorOnDisplay: ")
         getErrorTextView()?.gone()
     }
 
-    /**
-     * Set the swipe refresh layout you can override this function if you want to do some more task.
-     */
     private fun setSwipeRefresh() {
         Timber.d(tag, "setSwipeRefresh: ")
         getSwipeRefreshLayout()?.setOnRefreshListener {

@@ -14,16 +14,10 @@ import com.kirtan.baseLibrary.utils.toast
 import retrofit2.Response
 import timber.log.Timber
 
-/**
- * This class should be used when you need to call the apis in your activity.
- */
 abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
     BaseActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
     override val tag: String get() = "BaseAPIActivity"
 
-    /**
-     * This viewModel is auto implemented, no need to override this viewModel.
-     */
     override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
     private val apiStatusObserver: Observer<ApiCallingViewModel.ApiStatus> = Observer { status ->
         Timber.d(tag, "apiStatusObserver: newStatus:- $status")
@@ -67,9 +61,6 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
             apiCallingViewModel.apiStatus.value = value
         }
 
-    /**
-     * This method should be overridden whenever you needed to set up screen though code.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d(tag, "onCreate: ")
@@ -82,9 +73,6 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
 
-    /**
-     * This function loads the data through the api.
-     */
     private fun loadAPIData() {
         Timber.d(tag, "loadAPIData: ")
         if (apiCallingStatus == LOADING) {
@@ -96,9 +84,6 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 
-    /**
-     * Function will display the loader according the need.
-     */
     private fun showPageProgress() {
         Timber.d(tag, "showPageProgress: ")
         goneErrorOnDisplay()
@@ -110,9 +95,6 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         getCenterProgressBar()?.show()
     }
 
-    /**
-     * Function will hide the loader according the need.
-     */
     private fun gonePageProgress() {
         Timber.d(tag, "gonePageProgress: ")
         getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }

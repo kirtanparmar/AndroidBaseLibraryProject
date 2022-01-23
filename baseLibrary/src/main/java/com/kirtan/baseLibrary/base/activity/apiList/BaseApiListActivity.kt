@@ -21,15 +21,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import timber.log.Timber
 
-/**
- * Extend this class when you want to use the listing with api in your activity.
- */
 abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObject, ApiRequestType : Any?, ApiResponseType> :
     BaseListActivity<Screen, ModelType>(),
     ApiListCallingScreen<ApiRequestType, ApiResponseType, ListParsedResponse<ModelType>> {
-    /**
-     * This viewModel is auto implemented, no need to override this viewModel.
-     */
     override val apiCallingViewModel: ApiListViewModel<ApiResponseType> by viewModels()
     private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
@@ -73,9 +67,6 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
             apiCallingViewModel.dataStatus = value
         }
 
-    /**
-     * This function will auto load api data, you only have to parse the response.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         apiCallingViewModel.apiStatus.observe(this, apiStatusObserver)
@@ -83,18 +74,12 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
         observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
 
-    /**
-     * Function loads the data from api and calls the #observeApiResponse function on success.
-     */
     private fun loadPage() {
         if (apiCallingStatus != INIT) return
         apiCallingStatus = LOADING
         apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 
-    /**
-     * Function will observe the api response and will request for parsing the response into the list of models to be listed in the list screen.
-     */
     final override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this@BaseApiListActivity) { responseBody ->
             CoroutineScope(Dispatchers.Default).launch {
@@ -116,17 +101,11 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
         }
     }
 
-    /**
-     * Function will display the loader according the need.
-     */
     override fun showPageProgress() {
         if (getSwipeRefreshLayout()?.isRefreshing == true) return
         super.showPageProgress()
     }
 
-    /**
-     * Function will hide the loader according the need.
-     */
     override fun gonePageProgress() {
         getSwipeRefreshLayout()?.post { getSwipeRefreshLayout()?.isRefreshing = false }
         super.gonePageProgress()

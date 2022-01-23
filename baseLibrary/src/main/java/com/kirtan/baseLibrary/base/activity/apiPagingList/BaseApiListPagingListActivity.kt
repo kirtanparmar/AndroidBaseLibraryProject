@@ -89,16 +89,8 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
             }
         }
 
-    /**
-     * @return next page to be fetched from API
-     */
     fun getCurrentPage() = page
 
-    /**
-     * Function will auto load api data, you only have to parse the response.
-     * Function also set the paging on scroll of the recyclerView.
-     * Function can be overridden as your need. In such case please call include super callback for the same function.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         apiCallingViewModel.getApiResponse().observe(this, observeResponseStoredIntoLocal)
@@ -139,9 +131,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 
-    /**
-     * Function should not be overridden.
-     */
     final override fun observeApiDataResponse(apiResponse: LiveData<ApiResponseType>) {
         apiResponse.observe(this) { responseBody ->
             CoroutineScope(Dispatchers.Default).launch {
@@ -166,9 +155,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         }
     }
 
-    /**
-     * Function should not be overridden.
-     */
     override fun showPageProgress() {
         if (models.size > 0) {
             if (!models.last().isLoaderModel) getRecyclerView().post { models.add(getLoaderDataModel()) }
@@ -178,9 +164,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         }
     }
 
-    /**
-     * Function should not be overridden.
-     */
     override fun gonePageProgress() {
         if (models.size > 0) {
             if (models.last().isLoaderModel) getRecyclerView().post { models.removeAt(models.size - 1) }
@@ -189,9 +172,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         super.gonePageProgress()
     }
 
-    /**
-     * Function should not be overridden.
-     */
     override fun showErrorOnDisplay(text: String) {
         if (page - 1 == firstPage) super.showErrorOnDisplay(text)
         else {
