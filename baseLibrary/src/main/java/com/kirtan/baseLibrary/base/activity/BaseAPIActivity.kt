@@ -61,9 +61,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
     }
 
     private fun loadAPIData() {
-        if (apiCallingStatus == LOADING) {
-            return
-        }
+        if (apiCallingStatus != INIT) return
         apiCallingStatus = LOADING
         apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
@@ -99,12 +97,5 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         getErrorTextView()?.gone()
         getErrorTextView()?.text = ""
         getErrorView()?.gone()
-    }
-
-    override fun onDestroy() {
-        if (apiCallingStatus == LOADING) {
-            apiCallingStatus = INIT
-        }
-        super.onDestroy()
     }
 }

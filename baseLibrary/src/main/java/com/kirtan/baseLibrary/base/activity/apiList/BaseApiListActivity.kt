@@ -108,9 +108,4 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     override fun onSwipeRefreshDoExtra() {
         apiCallingStatus = INIT
     }
-
-    override fun onDestroy() {
-        if (apiCallingStatus == LOADING) apiCallingStatus = INIT
-        super.onDestroy()
-    }
 }

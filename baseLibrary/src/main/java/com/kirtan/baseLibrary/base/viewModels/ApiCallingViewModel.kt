@@ -33,12 +33,10 @@ open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
         this.apiResponse.value = apiResponse
     }
 
-    fun loadApi(api: suspend () -> Response<ApiResponseType>?) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val apiCall = api.invoke()
-                withContext(Dispatchers.Main) { setApiResponse(apiCall) }
-            }
+    fun loadApi(apiFunction: suspend () -> Response<ApiResponseType>?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val apiCall = apiFunction.invoke()
+            withContext(Dispatchers.Main) { setApiResponse(apiCall) }
         }
     }
 }
