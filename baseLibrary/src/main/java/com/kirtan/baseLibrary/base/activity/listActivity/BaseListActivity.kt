@@ -14,7 +14,6 @@ import com.kirtan.baseLibrary.base.dataHolder.Operation
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.show
 import com.kirtan.baseLibrary.utils.toast
-import timber.log.Timber
 
 abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject> :
     BaseActivity<Screen>(), ListScreen<ModelType> {
@@ -108,13 +107,11 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d(tag, "onCreate: ")
         setRv()
         setSwipeRefresh()
     }
 
     private fun setRv() {
-        Timber.d(tag, "setRv: ")
         getRecyclerView().layoutManager = layoutManager
         getRecyclerView().adapter = adapter
         copyToViewModelList = false
@@ -125,23 +122,18 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
     }
 
     protected open fun showPageProgress() {
-        Timber.d(tag, "showPageProgress: ")
         getCenterProgressBar()?.show()
     }
 
     protected open fun gonePageProgress() {
-        Timber.d(tag, "gonePageProgress: ")
         getCenterProgressBar()?.gone()
     }
 
     protected open fun showErrorOnDisplay(text: String) {
-        Timber.d(tag, "showErrorOnDisplay: ")
         if (text.isBlank()) {
-            Timber.d(tag, "showErrorOnDisplay: error is empty.")
             return
         }
         if (getErrorTextView() == null) {
-            Timber.d(tag, "showErrorOnDisplay: error textview is null, showing error toast.")
             toast(text)
         } else getErrorTextView()?.apply {
             setText(text)
@@ -150,14 +142,11 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
     }
 
     protected open fun hideErrorOnDisplay() {
-        Timber.d(tag, "hideErrorOnDisplay: ")
         getErrorTextView()?.gone()
     }
 
     private fun setSwipeRefresh() {
-        Timber.d(tag, "setSwipeRefresh: ")
         getSwipeRefreshLayout()?.setOnRefreshListener {
-            Timber.d(tag, "setOnRefreshListener: refreshing page.")
             hideErrorOnDisplay()
             models.clear()
             onSwipeRefreshDoExtra()

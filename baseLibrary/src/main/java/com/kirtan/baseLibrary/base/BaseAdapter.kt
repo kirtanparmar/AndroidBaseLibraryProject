@@ -18,7 +18,7 @@ abstract class BaseAdapter<VIEW : ViewDataBinding, T : PagingListModel, VH : Rec
     abstract val resource: Int
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == 1)
+        return if (viewType == -1)
             LoaderViewHolder(
                 DummyListLoaderBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -54,7 +54,7 @@ abstract class BaseAdapter<VIEW : ViewDataBinding, T : PagingListModel, VH : Rec
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (getItem(position).isLoaderModel) return 1
+        if (getItem(position).isLoaderModel) return -1
         return super.getItemViewType(position)
     }
 }

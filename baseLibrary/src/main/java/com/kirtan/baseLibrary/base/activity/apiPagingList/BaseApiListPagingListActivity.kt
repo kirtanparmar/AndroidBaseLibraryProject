@@ -24,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import timber.log.Timber
 
 abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType : PagingListModel, ApiRequestType : Any?, ApiResponseType : PagingApiResponse> :
     BaseListActivity<Screen, ModelType>(),
@@ -74,7 +73,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                 return@Observer
             }
             if (response.isSuccessful) {
-                Timber.d("${response.body()}")
                 val body = response.body()
                 if (body == null) {
                     toast(response.message())
@@ -84,7 +82,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                     apiCallingViewModel.setResponseData(body)
                 }
             } else {
-                Timber.d("${response.code()} ${response.message()}")
                 toast(response.message())
             }
         }
@@ -99,7 +96,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         getRecyclerView().addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                // Timber.v("onScrolled: dx: $dx, dy: $dy")
                 if (apiCallingStatus == COMPLETE && dy > 0) calculateForListingNewItems()
             }
         })

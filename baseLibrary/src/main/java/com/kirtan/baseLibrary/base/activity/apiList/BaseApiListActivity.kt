@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import timber.log.Timber
 
 abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObject, ApiRequestType : Any?, ApiResponseType> :
     BaseListActivity<Screen, ModelType>(),
@@ -38,13 +37,11 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     }
     private val observeResponseStoredIntoLocal: Observer<Response<ApiResponseType>?> =
         Observer { response ->
-            Timber.d("$response")
             if (response == null) {
                 showErrorOnDisplay(getString(R.string.server_unreachable))
                 return@Observer
             }
             if (response.isSuccessful) {
-                Timber.d("${response.body()}")
                 val body = response.body()
                 if (body == null) {
                     showErrorOnDisplay(response.message())
@@ -52,7 +49,6 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
                 }
                 apiCallingViewModel.setResponseData(body)
             } else {
-                Timber.d("${response.code()} ${response.message()}")
                 showErrorOnDisplay(response.message())
             }
         }
@@ -88,12 +84,10 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
                     val parsedResponse = parseListFromResponse(responseBody)
                     dataStatus = DataParsed
                     if (parsedResponse.isSuccess) {
-                        Timber.d("API Data Loaded : Success")
                         withContext(Dispatchers.Main) {
                             getRecyclerView().post { models.addAll(parsedResponse.apiListData) }
                         }
                     } else {
-                        Timber.d("API Data Loaded : Failed")
                         withContext(Dispatchers.Main) { showErrorOnDisplay(parsedResponse.errorMessage) }
                     }
                 }

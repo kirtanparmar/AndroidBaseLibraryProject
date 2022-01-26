@@ -1,7 +1,5 @@
 package com.kirtan.baseLibrary.base.dataHolder
 
-import timber.log.Timber
-
 abstract class BaseArrayList<T : BaseObject> : ArrayList<T>(), OnArrayListOperations<T> {
     override fun clear() = clear {}
 
@@ -125,7 +123,6 @@ abstract class BaseArrayList<T : BaseObject> : ArrayList<T>(), OnArrayListOperat
 
     private fun Exception.operateOnError(callBack: (operation: Operation) -> Unit) {
         printStackTrace()
-        Timber.e(this)
         callBack.invoke(Operation(OperationStatus.ERROR, "Error: $message"))
     }
 

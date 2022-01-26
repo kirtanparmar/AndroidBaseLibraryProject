@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import timber.log.Timber
 
 open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
     var apiStatus: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.INIT)
@@ -26,7 +25,6 @@ open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
             override fun setValue(value: Response<ApiResponseType>?) {
                 super.setValue(value)
                 apiStatus.value = ApiStatus.COMPLETE
-                Timber.d("$value")
             }
         }
 
