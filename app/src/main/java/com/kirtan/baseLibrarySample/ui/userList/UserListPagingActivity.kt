@@ -13,7 +13,7 @@ import com.kirtan.baseLibrary.base.activity.apiPagingList.BaseApiListPagingListA
 import com.kirtan.baseLibrary.base.activity.apiPagingList.PaginationOn
 import com.kirtan.baseLibrary.utils.parsedResponseForList.PageListParsedResponse
 import com.kirtan.baseLibrarySample.R
-import com.kirtan.baseLibrarySample.apis.Apis
+import com.kirtan.baseLibrarySample.apis.UsersApi
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.UserListResponse
 import com.kirtan.baseLibrarySample.databinding.ActivityUserListBinding
@@ -31,7 +31,7 @@ class UserListPagingActivity :
     override fun storeBundleValueIfNeeded(bundle: Bundle) = true
 
     override suspend fun getApiCallingFunction(apiRequest: Int): Response<UserListResponse>? =
-        Apis.getInstance().getUsers(page = apiRequest)
+        UsersApi.getInstance().getUsers(page = apiRequest)
 
     override fun parseListFromResponse(response: UserListResponse): PageListParsedResponse<User> =
         if (response.users.isNotEmpty())

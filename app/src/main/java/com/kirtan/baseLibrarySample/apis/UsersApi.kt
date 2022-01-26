@@ -7,9 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface Apis {
+interface UsersApi {
     companion object {
-        fun getInstance(): Apis = RetrofitHelper.retrofit.create(Apis::class.java)
+        fun getInstance() = RetrofitHelper.USER_API
     }
 
     @GET("user")

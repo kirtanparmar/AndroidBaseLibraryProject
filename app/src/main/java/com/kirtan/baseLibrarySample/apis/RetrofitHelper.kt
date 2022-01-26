@@ -1,7 +1,6 @@
 package com.kirtan.baseLibrarySample.apis
 
 import com.google.gson.GsonBuilder
-import com.kirtan.baseLibrarySample.App
 import com.kirtan.baseLibrarySample.utils.Constants
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -13,30 +12,16 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
-import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
 object RetrofitHelper {
-
-    private var retrofitInstance: Retrofit? = null
-
-    var app: WeakReference<App> = WeakReference(null)
-
-    fun resetClient() {
-        retrofitInstance = null
+    val USER_API: UsersApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(Constants.UsersUrl)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build().create(UsersApi::class.java)
     }
-
-    val retrofit: Retrofit
-        get() {
-            if (retrofitInstance == null) {
-                retrofitInstance = Retrofit.Builder()
-                    .baseUrl(Constants.BaseUrl)
-                    .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                    .build()
-            }
-            return retrofitInstance!!
-        }
 
     private val okHttpClient: OkHttpClient
         get() = OkHttpClient()
@@ -76,11 +61,10 @@ object RetrofitHelper {
                 }
             })
             .apply {
-                addInterceptor(HttpLoggingInterceptor { message ->
-                    Timber.tag("OkHttp").d(message)
-                }.apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                })
+                addInterceptor(
+                    HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }
+                        .apply { level = HttpLoggingInterceptor.Level.BODY }
+                )
             }
             .connectTimeout(1L, TimeUnit.MINUTES)
             .callTimeout(1L, TimeUnit.MINUTES)

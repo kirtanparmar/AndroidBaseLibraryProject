@@ -8,7 +8,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
 import com.kirtan.baseLibrary.base.activity.BaseAPIActivity
 import com.kirtan.baseLibrarySample.R
-import com.kirtan.baseLibrarySample.apis.Apis
+import com.kirtan.baseLibrarySample.apis.UsersApi
 import com.kirtan.baseLibrarySample.apis.responseModels.userInfoResponse.UserInfoResponse
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User
 import com.kirtan.baseLibrarySample.databinding.ActivityUserInfoBinding
@@ -18,7 +18,7 @@ class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserIn
     private var user: User = User()
 
     override suspend fun getApiCallingFunction(apiRequest: String): Response<UserInfoResponse>? =
-        Apis.getInstance().getUserInfo(apiRequest)
+        UsersApi.getInstance().getUserInfo(apiRequest)
 
     override fun getApiRequest(): String = user.id
 

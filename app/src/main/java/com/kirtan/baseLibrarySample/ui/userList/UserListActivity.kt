@@ -12,7 +12,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.kirtan.baseLibrary.base.activity.apiList.BaseApiListActivity
 import com.kirtan.baseLibrary.utils.parsedResponseForList.ListParsedResponse
 import com.kirtan.baseLibrarySample.R
-import com.kirtan.baseLibrarySample.apis.Apis
+import com.kirtan.baseLibrarySample.apis.UsersApi
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.UserListResponse
 import com.kirtan.baseLibrarySample.databinding.ActivityUserListBinding
@@ -29,7 +29,7 @@ class UserListActivity :
     override fun storeBundleValueIfNeeded(bundle: Bundle) = true
 
     override suspend fun getApiCallingFunction(apiRequest: Int): Response<UserListResponse>? =
-        Apis.getInstance().getUsers()
+        UsersApi.getInstance().getUsers()
 
     override fun parseListFromResponse(response: UserListResponse): ListParsedResponse<User> =
         if (response.users.isNotEmpty())
