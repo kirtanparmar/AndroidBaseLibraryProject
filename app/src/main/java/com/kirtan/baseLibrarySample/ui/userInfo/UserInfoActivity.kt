@@ -28,7 +28,7 @@ class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserIn
 
     override val getLayout: Int get() = R.layout.activity_user_info
 
-    override fun storeBundleValueIfNeeded(bundle: Bundle): Boolean {
+    override fun bundleFromPreviousActivity(bundle: Bundle): Boolean {
         user = bundle.getParcelable("user") ?: User()
         return user.id.isNotBlank()
             .also { userIdAvailable ->

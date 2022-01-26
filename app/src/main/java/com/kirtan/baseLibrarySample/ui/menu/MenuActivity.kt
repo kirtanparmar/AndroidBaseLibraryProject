@@ -12,7 +12,7 @@ class MenuActivity : BaseActivity<ActivityMenuBinding>() {
     override val getLayout: Int
         get() = R.layout.activity_menu
 
-    override fun storeBundleValueIfNeeded(bundle: Bundle): Boolean = true
+    override fun bundleFromPreviousActivity(bundle: Bundle): Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

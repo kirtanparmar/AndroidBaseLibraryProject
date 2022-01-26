@@ -26,7 +26,7 @@ class UserListActivity :
     override fun getErrorTextView(): MaterialTextView = screen.errorMsg
     override fun getSwipeRefreshLayout(): SwipeRefreshLayout = screen.swipeRefresh
     override val getLayout: Int get() = R.layout.activity_user_list
-    override fun storeBundleValueIfNeeded(bundle: Bundle) = true
+    override fun bundleFromPreviousActivity(bundle: Bundle) = true
 
     override suspend fun getApiCallingFunction(apiRequest: Int): Response<UserListResponse>? =
         UsersApi.getInstance().getUsers()

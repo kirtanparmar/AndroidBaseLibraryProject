@@ -19,14 +19,16 @@ abstract class BaseActivity<Screen : ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        screen = DataBindingUtil.setContentView(this, getLayout)
+        if (this::screen.isInitialized.not()) {
+            screen = DataBindingUtil.setContentView(this, getLayout)
+        }
         screen.lifecycleOwner = this
-        if (!storeBundleValueIfNeeded(bundle)) {
+        if (!bundleFromPreviousActivity(bundle)) {
             toast(getString(R.string.invalid_launch))
             finish()
             return
         }
     }
 
-    protected open fun storeBundleValueIfNeeded(bundle: Bundle): Boolean = true
+    protected open fun bundleFromPreviousActivity(bundle: Bundle): Boolean = true
 }
