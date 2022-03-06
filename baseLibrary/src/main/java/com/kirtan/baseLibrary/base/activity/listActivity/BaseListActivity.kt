@@ -36,7 +36,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
                 viewModelList.clear()
             }
             adapter.notifyItemRangeRemoved(0, lastListSize)
-            callBack.invoke(Operation())
+            callBack.invoke(Operation.Success)
         }
 
         override fun emptyListAdded(callBack: (operation: Operation) -> Unit) = checkEmpty(callBack)
@@ -51,7 +51,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
 
         override fun itemRemovedUnknownPosition(
             element: ModelType,
-            callBack: (operation: Operation) -> Unit
+            callBack: (operation: Operation) -> Unit,
         ) {
             if (copyToViewModelList) {
                 viewModelList.remove(element)
@@ -65,12 +65,12 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
                     showErrorOnDisplay(getString(R.string.no_data_found))
                 }
             }
-            callBack.invoke(Operation())
+            callBack.invoke(Operation.Success)
         }
 
         override fun newItemAdded(
             position: Int,
-            callBack: (operation: Operation) -> Unit
+            callBack: (operation: Operation) -> Unit,
         ) {
             if (copyToViewModelList) {
                 try {
@@ -81,13 +81,13 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
             }
             adapter.notifyItemInserted(position)
             getErrorTextView()?.gone()
-            callBack.invoke(Operation())
+            callBack.invoke(Operation.Success)
         }
 
         override fun newItemRangeAdded(
             start: Int,
             rangeSize: Int,
-            callBack: (operation: Operation) -> Unit
+            callBack: (operation: Operation) -> Unit,
         ) {
             if (copyToViewModelList) {
                 viewModelList.addAll(
@@ -97,7 +97,7 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
             }
             adapter.notifyItemRangeInserted(start, rangeSize)
             getErrorTextView()?.gone()
-            callBack.invoke(Operation())
+            callBack.invoke(Operation.Success)
         }
 
         override fun emptyObjectForNullAssertion(): ModelType = emptyObjectForNullAssertion

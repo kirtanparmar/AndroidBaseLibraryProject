@@ -1,6 +1,7 @@
 package com.kirtan.baseLibrary.base.dataHolder
 
-data class Operation(
-    val operation: OperationStatus = OperationStatus.SUCCESS,
-    val message: String = ""
-)
+sealed class Operation {
+    object Success : Operation()
+    class Error(val message: String = "") : Operation()
+    class Fail(val message: String = "") : Operation()
+}

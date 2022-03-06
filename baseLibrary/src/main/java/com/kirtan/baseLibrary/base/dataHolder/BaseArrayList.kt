@@ -123,10 +123,10 @@ abstract class BaseArrayList<T : BaseObject> : ArrayList<T>(), OnArrayListOperat
 
     private fun Exception.operateOnError(callBack: (operation: Operation) -> Unit) {
         printStackTrace()
-        callBack.invoke(Operation(OperationStatus.ERROR, "Error: $message"))
+        callBack.invoke(Operation.Error("Error: $message"))
     }
 
     private fun String.operateOnFail(callBack: (operation: Operation) -> Unit) {
-        callBack.invoke(Operation(OperationStatus.FAIL, this))
+        callBack.invoke(Operation.Fail(this))
     }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.baseLibrary.base.ApiListCallingScreen
 import com.kirtan.baseLibrary.base.ListPagingScreen
 import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
+import com.kirtan.baseLibrary.base.dataHolder.Operation
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel.Status.*
 import com.kirtan.baseLibrary.base.viewModels.ApiStatus
@@ -122,8 +123,12 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                         page++
                         withContext(Dispatchers.Main) {
                             getRecyclerView().post {
-                                models.addAll(parsedResponse.newPageData) {
-                                    getRecyclerView().post { calculateForListingNewItems() }
+                                models.addAll(parsedResponse.newPageData) { operation ->
+                                    when (operation) {
+                                        is Operation.Error -> showErrorOnDisplay(operation.message)
+                                        is Operation.Fail -> showErrorOnDisplay(operation.message)
+                                        Operation.Success -> getRecyclerView().post { calculateForListingNewItems() }
+                                    }
                                 }
                             }
                         }
@@ -160,6 +165,12 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
 
     override fun onSwipeRefreshDoExtra() {
         page = firstPage
-        models.clear { apiCallingStatus = ApiStatus.Init }
+        models.clear { operation ->
+            when (operation) {
+                is Operation.Error -> showErrorOnDisplay(operation.message)
+                is Operation.Fail -> showErrorOnDisplay(operation.message)
+                Operation.Success -> apiCallingStatus = ApiStatus.Init
+            }
+        }
     }
 }
