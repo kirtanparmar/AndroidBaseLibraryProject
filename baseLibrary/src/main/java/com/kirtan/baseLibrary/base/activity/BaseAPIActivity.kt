@@ -4,65 +4,47 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
-import com.kirtan.baseLibrary.R
 import com.kirtan.baseLibrary.base.ApiCallingScreen
 import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel
-import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel.ApiStatus.*
+import com.kirtan.baseLibrary.base.viewModels.ApiStatus
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.show
 import com.kirtan.baseLibrary.utils.toast
-import retrofit2.Response
+import timber.log.Timber
 
 abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
     BaseActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
     override val tag: String get() = "BaseAPIActivity"
 
     override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
-    private val apiStatusObserver: Observer<ApiCallingViewModel.ApiStatus> = Observer { status ->
+    private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
-            INIT -> loadAPIData()
-            COMPLETE -> gonePageProgress()
-            LOADING -> showPageProgress()
-            null -> {
-                apiCallingStatus = INIT
+            is ApiStatus.Init -> loadAPIData()
+            is ApiStatus.Loading -> showPageProgress()
+            is ApiStatus.Success -> gonePageProgress()
+            is ApiStatus.Error -> {
+                Timber.d("$status")
+                showErrorOnDisplay(status.error)
             }
         }
     }
-    private val observeResponseStoredIntoLocal: Observer<Response<ApiResponseType>?> =
-        Observer { response ->
-            if (response == null) {
-                showErrorOnDisplay(getString(R.string.server_unreachable))
-                return@Observer
-            }
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body == null) {
-                    showErrorOnDisplay(response.message())
-                    return@Observer
-                }
-                apiCallingViewModel.setResponseData(body)
-            } else showErrorOnDisplay(response.message())
-        }
 
-    private var apiCallingStatus: ApiCallingViewModel.ApiStatus?
-        get() = apiCallingViewModel.apiStatus.value
+    private var apiCallingStatus: ApiStatus
+        get() = apiCallingViewModel.apiStatus.value ?: ApiStatus.Init
         set(value) {
             apiCallingViewModel.apiStatus.value = value
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getSwipeRefreshLayout()?.setOnRefreshListener {
-            apiCallingStatus = INIT
-        }
+        getSwipeRefreshLayout()?.setOnRefreshListener { apiCallingStatus = ApiStatus.Init }
         apiCallingViewModel.apiStatus.observe(this, apiStatusObserver)
-        apiCallingViewModel.getApiResponse().observe(this, observeResponseStoredIntoLocal)
         observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
 
     private fun loadAPIData() {
-        if (apiCallingStatus != INIT) return
-        apiCallingStatus = LOADING
+        if (apiCallingStatus !is ApiStatus.Init) return
+        apiCallingStatus = ApiStatus.Loading
         apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 

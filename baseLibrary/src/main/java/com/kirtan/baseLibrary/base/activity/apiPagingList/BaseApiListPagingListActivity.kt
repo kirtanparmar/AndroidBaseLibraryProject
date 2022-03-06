@@ -7,14 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kirtan.baseLibrary.R
 import com.kirtan.baseLibrary.base.ApiListCallingScreen
 import com.kirtan.baseLibrary.base.ListPagingScreen
 import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
-import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel
-import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel.ApiStatus.*
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel.Status.*
+import com.kirtan.baseLibrary.base.viewModels.ApiStatus
 import com.kirtan.baseLibrary.utils.PagingListModel
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.parsedResponseForList.PageListParsedResponse
@@ -23,7 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Response
+import timber.log.Timber
 
 abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType : PagingListModel, ApiRequestType : Any?, ApiResponseType : PagingApiResponse> :
     BaseListActivity<Screen, ModelType>(),
@@ -34,8 +32,8 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     private val dataLoaderModel by lazy { getLoaderDataModel() }
 
     override val apiCallingViewModel: ApiPagingViewModel<ApiResponseType> by viewModels()
-    private var apiCallingStatus: ApiCallingViewModel.ApiStatus?
-        get() = apiCallingViewModel.apiStatus.value
+    private var apiCallingStatus: ApiStatus
+        get() = apiCallingViewModel.apiStatus.value ?: ApiStatus.Init
         set(value) {
             apiCallingViewModel.apiStatus.value = value
         }
@@ -54,49 +52,33 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         set(value) {
             apiCallingViewModel.dataStatus = value
         }
-    private val apiStatusObserver: Observer<ApiCallingViewModel.ApiStatus> = Observer { status ->
+    private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
-            INIT -> {
+            is ApiStatus.Error -> {
+                Timber.d("$status")
+                gonePageProgress()
+                showErrorOnDisplay(status.error)
+            }
+            ApiStatus.Init -> {
                 if (page == -1) page = firstPage
                 dataStatus = DataNotParsed
                 loadPage()
             }
-            LOADING -> showPageProgress()
-            COMPLETE -> gonePageProgress()
-            else -> apiCallingStatus = INIT
+            ApiStatus.Loading -> showPageProgress()
+            ApiStatus.Success -> gonePageProgress()
         }
     }
-    private val observeResponseStoredIntoLocal: Observer<Response<ApiResponseType>?> =
-        Observer { response ->
-            if (response == null) {
-                toast(getString(R.string.server_unreachable))
-                return@Observer
-            }
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body == null) {
-                    toast(response.message())
-                    return@Observer
-                }
-                if (!body.dataParsed) {
-                    apiCallingViewModel.setResponseData(body)
-                }
-            } else {
-                toast(response.message())
-            }
-        }
 
     fun getCurrentPage() = page
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        apiCallingViewModel.getApiResponse().observe(this, observeResponseStoredIntoLocal)
         observeApiDataResponse(apiCallingViewModel.getResponseData())
         apiCallingViewModel.apiStatus.observe(this, apiStatusObserver)
         getRecyclerView().addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (apiCallingStatus == COMPLETE && dy > 0) calculateForListingNewItems()
+                if (apiCallingStatus == ApiStatus.Success && dy > 0) calculateForListingNewItems()
             }
         })
     }
@@ -109,12 +91,12 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                 (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
             if ((visibleItemCount + firstVisibleItemIndex) >= totalItemCount) {
                 if (apiCallingViewModel.paginationInfo.paginationOn == PaginationOn.ITEM_COUNT) {
-                    if (adapter.itemCount < totalPagination && apiCallingStatus == COMPLETE) {
-                        apiCallingStatus = INIT
+                    if (adapter.itemCount < totalPagination && apiCallingStatus == ApiStatus.Success) {
+                        apiCallingStatus = ApiStatus.Init
                     }
                 } else if (apiCallingViewModel.paginationInfo.paginationOn == PaginationOn.PAGE) {
-                    if (page <= totalPagination && apiCallingStatus == COMPLETE) {
-                        apiCallingStatus = INIT
+                    if (page <= totalPagination && apiCallingStatus == ApiStatus.Success) {
+                        apiCallingStatus = ApiStatus.Init
                     }
                 }
             }
@@ -122,8 +104,8 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     }
 
     private fun loadPage() {
-        if (apiCallingStatus != INIT) return
-        apiCallingStatus = LOADING
+        if (apiCallingStatus != ApiStatus.Init) return
+        apiCallingStatus = ApiStatus.Loading
         apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 
@@ -178,6 +160,6 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
 
     override fun onSwipeRefreshDoExtra() {
         page = firstPage
-        models.clear { apiCallingStatus = INIT }
+        models.clear { apiCallingStatus = ApiStatus.Init }
     }
 }

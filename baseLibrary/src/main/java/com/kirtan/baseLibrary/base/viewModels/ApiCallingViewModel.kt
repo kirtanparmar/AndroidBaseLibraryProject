@@ -10,33 +10,27 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
-    var apiStatus: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.INIT)
+    var apiStatus: MutableLiveData<ApiStatus> = MutableLiveData(ApiStatus.Init)
 
     private val responseData: MutableLiveData<ApiResponseType> = MutableLiveData()
     fun getResponseData(): LiveData<ApiResponseType> = responseData
-    fun setResponseData(responseData: ApiResponseType) {
-        this.responseData.value = responseData
-    }
-
-    enum class ApiStatus { INIT, COMPLETE, LOADING }
-
-    private val apiResponse: MutableLiveData<Response<ApiResponseType>?> =
-        object : MutableLiveData<Response<ApiResponseType>?>() {
-            override fun setValue(value: Response<ApiResponseType>?) {
-                super.setValue(value)
-                apiStatus.value = ApiStatus.COMPLETE
-            }
-        }
-
-    fun getApiResponse(): LiveData<Response<ApiResponseType>?> = apiResponse
-    private fun setApiResponse(apiResponse: Response<ApiResponseType>?) {
-        this.apiResponse.value = apiResponse
-    }
 
     fun loadApi(apiFunction: suspend () -> Response<ApiResponseType>?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val apiCall = apiFunction.invoke()
-            withContext(Dispatchers.Main) { setApiResponse(apiCall) }
+            val response = apiFunction.invoke()
+            if (response == null) {
+                apiStatus.value = ApiStatus.Error("Server Unreachable")
+                return@launch
+            }
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body == null) {
+                    apiStatus.value = ApiStatus.Error(response.message(), response.code())
+                    return@launch
+                }
+                withContext(Dispatchers.Main) { apiStatus.value = ApiStatus.Success }
+                withContext(Dispatchers.Main) { responseData.postValue(body) }
+            } else apiStatus.value = ApiStatus.Error(response.message(), response.code())
         }
     }
 }

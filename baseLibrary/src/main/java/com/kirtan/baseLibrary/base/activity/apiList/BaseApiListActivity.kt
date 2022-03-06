@@ -5,20 +5,18 @@ import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.kirtan.baseLibrary.R
 import com.kirtan.baseLibrary.base.ApiListCallingScreen
 import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
 import com.kirtan.baseLibrary.base.dataHolder.BaseObject
-import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel.ApiStatus
-import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel.ApiStatus.*
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel.Status.*
+import com.kirtan.baseLibrary.base.viewModels.ApiStatus
 import com.kirtan.baseLibrary.utils.parsedResponseForList.ListParsedResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Response
+import timber.log.Timber
 
 abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObject, ApiRequestType : Any?, ApiResponseType> :
     BaseListActivity<Screen, ModelType>(),
@@ -26,32 +24,19 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     override val apiCallingViewModel: ApiListViewModel<ApiResponseType> by viewModels()
     private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
-            INIT -> {
+            is ApiStatus.Error -> {
+                Timber.d("$status")
+                gonePageProgress()
+                showErrorOnDisplay(status.error)
+            }
+            ApiStatus.Init -> {
                 apiCallingViewModel.dataStatus = DataNotParsed
                 loadPage()
             }
-            LOADING -> showPageProgress()
-            COMPLETE -> gonePageProgress()
-            else -> apiCallingStatus = INIT
+            ApiStatus.Loading -> showPageProgress()
+            ApiStatus.Success -> gonePageProgress()
         }
     }
-    private val observeResponseStoredIntoLocal: Observer<Response<ApiResponseType>?> =
-        Observer { response ->
-            if (response == null) {
-                showErrorOnDisplay(getString(R.string.server_unreachable))
-                return@Observer
-            }
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body == null) {
-                    showErrorOnDisplay(response.message())
-                    return@Observer
-                }
-                apiCallingViewModel.setResponseData(body)
-            } else {
-                showErrorOnDisplay(response.message())
-            }
-        }
     private var apiCallingStatus: ApiStatus?
         get() = apiCallingViewModel.apiStatus.value
         set(value) {
@@ -66,13 +51,12 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         apiCallingViewModel.apiStatus.observe(this, apiStatusObserver)
-        apiCallingViewModel.getApiResponse().observe(this, observeResponseStoredIntoLocal)
         observeApiDataResponse(apiCallingViewModel.getResponseData())
     }
 
     private fun loadPage() {
-        if (apiCallingStatus != INIT) return
-        apiCallingStatus = LOADING
+        if (apiCallingStatus != ApiStatus.Init) return
+        apiCallingStatus = ApiStatus.Loading
         apiCallingViewModel.loadApi { getApiCallingFunction(getApiRequest()) }
     }
 
@@ -106,6 +90,6 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     }
 
     override fun onSwipeRefreshDoExtra() {
-        apiCallingStatus = INIT
+        apiCallingStatus = ApiStatus.Init
     }
 }
