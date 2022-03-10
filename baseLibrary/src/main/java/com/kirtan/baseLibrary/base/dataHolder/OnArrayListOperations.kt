@@ -1,6 +1,6 @@
 package com.kirtan.baseLibrary.base.dataHolder
 
-sealed interface OnArrayListOperations<T> {
+interface OnArrayListOperations<T> {
     fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit = {})
     fun listCleared(lastListSize: Int, callBack: (operation: Operation) -> Unit = {})
     fun emptyListAdded(callBack: (operation: Operation) -> Unit = {})
