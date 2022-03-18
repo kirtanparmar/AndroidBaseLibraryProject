@@ -1,5 +1,6 @@
 package com.kirtan.baseLibrary.base
 
+import android.net.ConnectivityManager
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -10,6 +11,7 @@ import retrofit2.Response
 
 interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
     val apiCallingViewModel: ApiCallingViewModel<ApiResponse>
+    val networkCallback: ConnectivityManager.NetworkCallback
 
     suspend fun getApiCallingFunction(apiRequest: ApiRequestType): Response<ApiResponse>?
 
@@ -28,4 +30,6 @@ interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
     fun getErrorView(): View?
 
     fun getNoNetworkView(): View?
+
+    fun onNetworkStateChange(networkStatus: NetworkStatus) {}
 }

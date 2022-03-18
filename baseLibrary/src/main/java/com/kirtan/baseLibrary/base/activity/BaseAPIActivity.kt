@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import com.kirtan.baseLibrary.base.ApiCallingScreen
+import com.kirtan.baseLibrary.base.NetworkStatus
 import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiStatus
 import com.kirtan.baseLibrary.utils.gone
@@ -19,8 +20,8 @@ import timber.log.Timber
 abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
     BaseActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
     override val tag: String get() = "BaseAPIActivity"
-
     override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
+
     private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
             is ApiStatus.Init -> loadAPIData()
@@ -35,7 +36,6 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
             }
         }
     }
-
     private var apiCallingStatus: ApiStatus
         get() = apiCallingViewModel.apiStatus.value ?: ApiStatus.Init
         set(value) {
@@ -104,7 +104,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
         getErrorView()?.gone()
     }
 
-    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+    final override val networkCallback = object : ConnectivityManager.NetworkCallback() {
         // network is available for use
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
@@ -115,6 +115,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
                     apiCallingStatus = ApiStatus.Init
                 }
             }
+            onNetworkStateChange(NetworkStatus.NetworkConnected)
         }
 
         // Network capabilities have changed for the network
@@ -133,6 +134,7 @@ abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiR
             super.onLost(network)
             Timber.d("networkChange internet lost")
             getNoNetworkView()?.show()
+            onNetworkStateChange(NetworkStatus.NetworkDisconnected)
         }
 
         override fun onUnavailable() {

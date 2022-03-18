@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.baseLibrary.base.ApiListCallingScreen
 import com.kirtan.baseLibrary.base.ListPagingScreen
+import com.kirtan.baseLibrary.base.NetworkStatus
 import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
 import com.kirtan.baseLibrary.base.dataHolder.Operation
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
@@ -34,10 +35,10 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     ListPagingScreen<ModelType>,
     ApiListCallingScreen<ApiRequestType, ApiResponseType, PageListParsedResponse<ModelType>> {
 
+    override val apiCallingViewModel: ApiPagingViewModel<ApiResponseType> by viewModels()
+
     private val firstPage: Int get() = getFirstPagePosition()
     private val dataLoaderModel by lazy { getLoaderDataModel() }
-
-    override val apiCallingViewModel: ApiPagingViewModel<ApiResponseType> by viewModels()
     private var apiCallingStatus: ApiStatus
         get() = apiCallingViewModel.apiStatus.value ?: ApiStatus.Init
         set(value) {
@@ -198,7 +199,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
         }
     }
 
-    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+    final override val networkCallback = object : ConnectivityManager.NetworkCallback() {
         // network is available for use
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
@@ -209,6 +210,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                     apiCallingStatus = ApiStatus.Init
                 }
             }
+            onNetworkStateChange(NetworkStatus.NetworkConnected)
         }
 
         // Network capabilities have changed for the network
@@ -227,6 +229,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
             super.onLost(network)
             Timber.d("networkChange internet lost")
             getNoNetworkView()?.show()
+            onNetworkStateChange(NetworkStatus.NetworkDisconnected)
         }
 
         override fun onUnavailable() {

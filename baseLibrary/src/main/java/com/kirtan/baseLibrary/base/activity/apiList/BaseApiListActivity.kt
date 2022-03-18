@@ -10,6 +10,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.kirtan.baseLibrary.base.ApiListCallingScreen
+import com.kirtan.baseLibrary.base.NetworkStatus
 import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
 import com.kirtan.baseLibrary.base.dataHolder.BaseObject
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
@@ -28,6 +29,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     BaseListActivity<Screen, ModelType>(),
     ApiListCallingScreen<ApiRequestType, ApiResponseType, ListParsedResponse<ModelType>> {
     override val apiCallingViewModel: ApiListViewModel<ApiResponseType> by viewModels()
+
     private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
             is ApiStatus.Error -> {
@@ -118,7 +120,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
         apiCallingStatus = ApiStatus.Init
     }
 
-    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+    final override val networkCallback = object : ConnectivityManager.NetworkCallback() {
         // network is available for use
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
@@ -129,6 +131,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
                     apiCallingStatus = ApiStatus.Init
                 }
             }
+            onNetworkStateChange(NetworkStatus.NetworkConnected)
         }
 
         // Network capabilities have changed for the network
@@ -147,6 +150,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
             super.onLost(network)
             Timber.d("networkChange internet lost")
             getNoNetworkView()?.show()
+            onNetworkStateChange(NetworkStatus.NetworkDisconnected)
         }
 
         override fun onUnavailable() {
