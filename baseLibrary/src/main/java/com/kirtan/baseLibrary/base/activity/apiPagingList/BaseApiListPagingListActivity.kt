@@ -1,5 +1,9 @@
 package com.kirtan.baseLibrary.base.activity.apiPagingList
 
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
@@ -17,6 +21,7 @@ import com.kirtan.baseLibrary.base.viewModels.ApiStatus
 import com.kirtan.baseLibrary.utils.PagingListModel
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.parsedResponseForList.PageListParsedResponse
+import com.kirtan.baseLibrary.utils.show
 import com.kirtan.baseLibrary.utils.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +70,10 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                 dataStatus = DataNotParsed
                 loadPage()
             }
-            ApiStatus.Loading -> showPageProgress()
+            ApiStatus.Loading -> {
+                goneErrorOnDisplay()
+                showPageProgress()
+            }
             ApiStatus.Success -> gonePageProgress()
         }
     }
@@ -82,6 +90,22 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                 if (apiCallingStatus == ApiStatus.Success && dy > 0) calculateForListingNewItems()
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            (getSystemService(ConnectivityManager::class.java)
+                    ).registerDefaultNetworkCallback(networkCallback)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            (getSystemService(ConnectivityManager::class.java)
+                    ).unregisterNetworkCallback(networkCallback)
+        }
     }
 
     private fun calculateForListingNewItems() {
@@ -171,6 +195,43 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
                 is Operation.Fail -> showErrorOnDisplay(operation.message)
                 Operation.Success -> apiCallingStatus = ApiStatus.Init
             }
+        }
+    }
+
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        // network is available for use
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            Timber.d("networkChange internet connected")
+            getNoNetworkView()?.gone()
+            screen.root.post {
+                if (apiCallingStatus is ApiStatus.Error) {
+                    apiCallingStatus = ApiStatus.Init
+                }
+            }
+        }
+
+        // Network capabilities have changed for the network
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities,
+        ) {
+            super.onCapabilitiesChanged(network, networkCapabilities)
+            val unmetered =
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+            Timber.d("networkChange Unmetered: $unmetered")
+        }
+
+        // lost network connection
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            Timber.d("networkChange internet lost")
+            getNoNetworkView()?.show()
+        }
+
+        override fun onUnavailable() {
+            super.onUnavailable()
+            Timber.d("networkChange internet unavailable")
         }
     }
 }

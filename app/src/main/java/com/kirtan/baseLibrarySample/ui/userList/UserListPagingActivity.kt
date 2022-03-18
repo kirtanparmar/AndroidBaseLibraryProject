@@ -58,4 +58,5 @@ class UserListPagingActivity :
     override val emptyObjectForNullAssertion: User = User()
     override fun getErrorView(): View? = null
     override fun getPaginationType(): PaginationOn = PaginationOn.ITEM_COUNT
+    override fun getNoNetworkView(): View? = null
 }

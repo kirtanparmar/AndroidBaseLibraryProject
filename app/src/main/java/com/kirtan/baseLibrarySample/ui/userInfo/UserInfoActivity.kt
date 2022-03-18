@@ -41,4 +41,5 @@ class UserInfoActivity : BaseAPIActivity<ActivityUserInfoBinding, String, UserIn
     override fun getSwipeRefreshLayout(): SwipeRefreshLayout = screen.swipeRefresh
     override fun getErrorTextView(): MaterialTextView? = null
     override fun getErrorView(): View? = null
+    override fun getNoNetworkView(): View? = null
 }

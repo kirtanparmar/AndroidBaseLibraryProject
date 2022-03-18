@@ -141,13 +141,13 @@ abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject
         }
     }
 
-    protected open fun hideErrorOnDisplay() {
+    protected open fun goneErrorOnDisplay() {
         getErrorTextView()?.gone()
     }
 
     private fun setSwipeRefresh() {
         getSwipeRefreshLayout()?.setOnRefreshListener {
-            hideErrorOnDisplay()
+            goneErrorOnDisplay()
             models.clear()
             onSwipeRefreshDoExtra()
             setRv()

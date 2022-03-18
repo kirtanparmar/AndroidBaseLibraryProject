@@ -26,4 +26,6 @@ interface ApiCallingScreen<ApiRequestType : Any?, ApiResponse> {
     fun getErrorTextView(): TextView?
 
     fun getErrorView(): View?
+
+    fun getNoNetworkView(): View?
 }

@@ -54,4 +54,5 @@ class UserListActivity :
     }
 
     override fun getErrorView(): View? = null
+    override fun getNoNetworkView(): View? = null
 }

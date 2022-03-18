@@ -19,7 +19,7 @@ open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = apiFunction.invoke()
             if (response == null) {
-                apiStatus.value = ApiStatus.Error("Server Unreachable")
+                apiStatus.value = ApiStatus.Error("Server Unreachable", -1)
                 return@launch
             }
             if (response.isSuccessful) {
@@ -30,7 +30,9 @@ open class ApiCallingViewModel<ApiResponseType> : ViewModel() {
                 }
                 withContext(Dispatchers.Main) { apiStatus.value = ApiStatus.Success }
                 withContext(Dispatchers.Main) { responseData.postValue(body) }
-            } else apiStatus.value = ApiStatus.Error(response.message(), response.code())
+            } else withContext(Dispatchers.Main) {
+                apiStatus.value = ApiStatus.Error(response.message(), response.code())
+            }
         }
     }
 }

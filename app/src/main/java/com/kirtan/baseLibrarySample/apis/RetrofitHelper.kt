@@ -71,5 +71,4 @@ object RetrofitHelper {
             .readTimeout(1L, TimeUnit.MINUTES)
             .writeTimeout(1L, TimeUnit.MINUTES)
             .build()
-
 }
