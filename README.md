@@ -6,8 +6,17 @@ Also you can modify the code as your convince.
 
 Thank you.
 
-implement into your project Add it in your root build.gradle at the end of repositories:
-allprojects { repositories { maven { url 'https://jitpack.io' } } }
+implement into your project.
+Add it in your root build.gradle at the end of repositories:
+    allprojects {
+        repositories { 
+            maven { 
+                url 'https://jitpack.io' 
+            }
+        }
+    }
 
-Add the dependency dependencies { implementation 'com.github.kirtanparmar:AndroidBaseLibraryProject:
-Tag' }
+Add the dependency:
+    dependencies { 
+        implementation 'com.github.kirtanparmar:AndroidBaseLibraryProject:0.1.1' 
+    }
