@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
-import com.kirtan.baseLibrary.base.ApiCallingScreen
+import com.kirtan.baseLibrary.apiHelpers.ApiCallingScreen
 import com.kirtan.baseLibrary.base.NetworkStatus
 import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiStatus

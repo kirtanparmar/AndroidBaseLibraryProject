@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.base
+package com.kirtan.baseLibrary.apiHelpers
 
 import android.net.ConnectivityManager
 import android.view.View
@@ -6,6 +6,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.kirtan.baseLibrary.base.NetworkStatus
 import com.kirtan.baseLibrary.base.viewModels.ApiCallingViewModel
 import retrofit2.Response
 

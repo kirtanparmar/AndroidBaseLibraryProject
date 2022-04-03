@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.base
+package com.kirtan.baseLibrary.apiHelpers
 
 interface ApiListCallingScreen<ApiRequestType : Any?, ApiResponseType, ParsedResponse> :
     ApiCallingScreen<ApiRequestType, ApiResponseType> {

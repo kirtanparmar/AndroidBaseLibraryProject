@@ -1,7 +1,7 @@
 package com.kirtan.baseLibrary.base.activity.listActivity
 
 import androidx.lifecycle.ViewModel
-import com.kirtan.baseLibrary.base.dataHolder.BaseObject
+import com.kirtan.baseLibrary.dataHolder.BaseObject
 
 class ListViewModel<T : BaseObject> : ViewModel() {
     var copyToViewModelList: Boolean = true

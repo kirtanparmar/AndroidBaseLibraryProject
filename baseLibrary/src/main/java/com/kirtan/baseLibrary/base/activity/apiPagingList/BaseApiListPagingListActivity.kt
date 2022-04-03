@@ -11,14 +11,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kirtan.baseLibrary.base.ApiListCallingScreen
+import com.kirtan.baseLibrary.apiHelpers.ApiListCallingScreen
 import com.kirtan.baseLibrary.base.ListPagingScreen
 import com.kirtan.baseLibrary.base.NetworkStatus
 import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
-import com.kirtan.baseLibrary.base.dataHolder.Operation
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel.Status.*
 import com.kirtan.baseLibrary.base.viewModels.ApiStatus
+import com.kirtan.baseLibrary.dataHolder.Operation
 import com.kirtan.baseLibrary.utils.PagingListModel
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.parsedResponseForList.PageListParsedResponse

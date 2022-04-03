@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.base.dataHolder
+package com.kirtan.baseLibrary.dataHolder
 
 interface OnArrayListOperations<T> {
     fun newItemAdded(position: Int, callBack: (operation: Operation) -> Unit = {})

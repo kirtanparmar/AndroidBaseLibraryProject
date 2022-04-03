@@ -9,13 +9,13 @@ import androidx.activity.viewModels
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.kirtan.baseLibrary.base.ApiListCallingScreen
+import com.kirtan.baseLibrary.apiHelpers.ApiListCallingScreen
 import com.kirtan.baseLibrary.base.NetworkStatus
 import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
-import com.kirtan.baseLibrary.base.dataHolder.BaseObject
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel.Status.*
 import com.kirtan.baseLibrary.base.viewModels.ApiStatus
+import com.kirtan.baseLibrary.dataHolder.BaseObject
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.parsedResponseForList.ListParsedResponse
 import com.kirtan.baseLibrary.utils.show

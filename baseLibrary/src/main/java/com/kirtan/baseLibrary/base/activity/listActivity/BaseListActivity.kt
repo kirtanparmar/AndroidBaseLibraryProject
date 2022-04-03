@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.baseLibrary.R
 import com.kirtan.baseLibrary.base.ListScreen
 import com.kirtan.baseLibrary.base.activity.BaseActivity
-import com.kirtan.baseLibrary.base.dataHolder.BaseArrayList
-import com.kirtan.baseLibrary.base.dataHolder.BaseObject
-import com.kirtan.baseLibrary.base.dataHolder.Operation
+import com.kirtan.baseLibrary.dataHolder.BaseArrayList
+import com.kirtan.baseLibrary.dataHolder.BaseObject
+import com.kirtan.baseLibrary.dataHolder.Operation
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.show
 import com.kirtan.baseLibrary.utils.toast

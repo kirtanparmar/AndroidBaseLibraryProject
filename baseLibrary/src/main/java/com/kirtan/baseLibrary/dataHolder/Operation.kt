@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.base.dataHolder
+package com.kirtan.baseLibrary.dataHolder
 
 sealed class Operation {
     object Success : Operation()

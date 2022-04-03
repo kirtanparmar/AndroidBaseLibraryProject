@@ -1,3 +1,3 @@
-package com.kirtan.baseLibrary.base.dataHolder
+package com.kirtan.baseLibrary.dataHolder
 
 abstract class BaseObject(var nullObject: Boolean = false)
