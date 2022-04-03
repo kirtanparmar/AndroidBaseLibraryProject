@@ -17,7 +17,7 @@ import com.kirtan.baseLibrary.utils.toast
 
 abstract class BaseListActivity<Screen : ViewDataBinding, ModelType : BaseObject> :
     BaseActivity<Screen>(), ListScreen<ModelType> {
-    override val tag: String
+    override val screenTag: String
         get() = "BaseListActivity"
     private val listViewModel: ListViewModel<ModelType> by viewModels()
     private val viewModelList get() = listViewModel.models

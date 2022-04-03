@@ -19,7 +19,7 @@ import timber.log.Timber
 
 abstract class BaseAPIActivity<Screen : ViewDataBinding, ApiRequest : Any?, ApiResponseType> :
     BaseActivity<Screen>(), ApiCallingScreen<ApiRequest, ApiResponseType> {
-    override val tag: String get() = "BaseAPIActivity"
+    override val screenTag: String get() = "BaseAPIActivity"
     override val apiCallingViewModel: ApiCallingViewModel<ApiResponseType> by viewModels()
 
     private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->

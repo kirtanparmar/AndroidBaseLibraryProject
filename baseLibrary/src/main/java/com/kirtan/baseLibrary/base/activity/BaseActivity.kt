@@ -10,7 +10,7 @@ import com.kirtan.baseLibrary.utils.toast
 
 abstract class BaseActivity<Screen : ViewDataBinding> : AppCompatActivity() {
     protected lateinit var screen: Screen
-    protected open val tag = "BaseActivity"
+    protected open val screenTag = "BaseActivity"
 
     @get:LayoutRes
     abstract val getLayout: Int

@@ -36,6 +36,7 @@ abstract class BaseApiListPagingListActivity<Screen : ViewDataBinding, ModelType
     ApiListCallingScreen<ApiRequestType, ApiResponseType, PageListParsedResponse<ModelType>> {
 
     override val apiCallingViewModel: ApiPagingViewModel<ApiResponseType> by viewModels()
+    override val screenTag: String get() = "BaseApiListPagingListActivity"
 
     private val firstPage: Int get() = getFirstPagePosition()
     private val dataLoaderModel by lazy { getLoaderDataModel() }

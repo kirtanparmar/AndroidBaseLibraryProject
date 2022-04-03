@@ -29,6 +29,7 @@ abstract class BaseApiListActivity<Screen : ViewDataBinding, ModelType : BaseObj
     BaseListActivity<Screen, ModelType>(),
     ApiListCallingScreen<ApiRequestType, ApiResponseType, ListParsedResponse<ModelType>> {
     override val apiCallingViewModel: ApiListViewModel<ApiResponseType> by viewModels()
+    override val screenTag: String get() = "BaseApiListActivity"
 
     private val apiStatusObserver: Observer<ApiStatus> = Observer { status ->
         when (status) {
