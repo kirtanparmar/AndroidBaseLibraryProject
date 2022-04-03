@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.base
+package com.kirtan.baseLibrary.listHelper
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.baseLibrary.databinding.DummyListLoaderBinding
-import com.kirtan.baseLibrary.utils.PagingListModel
+import com.kirtan.baseLibrary.listHelper.dataHolder.PagingListModel
 
 abstract class BaseAdapter<VIEW : ViewDataBinding, T : PagingListModel, VH : RecyclerView.ViewHolder>
     (diffCallback: DiffUtil.ItemCallback<T>) :

@@ -1,6 +1,6 @@
-package com.kirtan.baseLibrary.utils.parsedResponseForList
+package com.kirtan.baseLibrary.listHelper.parsedResponseForList
 
-import com.kirtan.baseLibrary.utils.PagingListModel
+import com.kirtan.baseLibrary.listHelper.dataHolder.PagingListModel
 
 data class PageListParsedResponse<ModelType : PagingListModel>(
     val isSuccess: Boolean,

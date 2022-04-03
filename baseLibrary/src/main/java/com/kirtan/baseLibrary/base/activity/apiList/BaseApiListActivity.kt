@@ -15,9 +15,9 @@ import com.kirtan.baseLibrary.base.activity.listActivity.BaseListActivity
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel
 import com.kirtan.baseLibrary.base.viewModels.ApiListViewModel.Status.*
 import com.kirtan.baseLibrary.base.viewModels.ApiStatus
-import com.kirtan.baseLibrary.dataHolder.BaseObject
+import com.kirtan.baseLibrary.listHelper.dataHolder.BaseObject
+import com.kirtan.baseLibrary.listHelper.parsedResponseForList.ListParsedResponse
 import com.kirtan.baseLibrary.utils.gone
-import com.kirtan.baseLibrary.utils.parsedResponseForList.ListParsedResponse
 import com.kirtan.baseLibrary.utils.show
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

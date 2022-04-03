@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.dataHolder
+package com.kirtan.baseLibrary.listHelper.dataHolder
 
 abstract class BaseArrayList<T : BaseObject> : ArrayList<T>(), OnArrayListOperations<T> {
     override fun clear() = clear {}

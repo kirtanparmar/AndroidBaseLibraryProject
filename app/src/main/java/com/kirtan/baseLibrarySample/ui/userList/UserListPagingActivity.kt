@@ -11,7 +11,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
 import com.kirtan.baseLibrary.base.activity.apiPagingList.BaseApiListPagingListActivity
 import com.kirtan.baseLibrary.base.activity.apiPagingList.PaginationOn
-import com.kirtan.baseLibrary.utils.parsedResponseForList.PageListParsedResponse
+import com.kirtan.baseLibrary.listHelper.parsedResponseForList.PageListParsedResponse
 import com.kirtan.baseLibrarySample.R
 import com.kirtan.baseLibrarySample.apis.UsersApi
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User

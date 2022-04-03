@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.base
+package com.kirtan.baseLibrary.listHelper
 
 import android.widget.ProgressBar
 import android.widget.TextView

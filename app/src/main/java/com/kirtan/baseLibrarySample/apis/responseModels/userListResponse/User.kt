@@ -3,7 +3,7 @@ package com.kirtan.baseLibrarySample.apis.responseModels.userListResponse
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import com.google.gson.annotations.SerializedName
-import com.kirtan.baseLibrary.utils.PagingListModel
+import com.kirtan.baseLibrary.listHelper.dataHolder.PagingListModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

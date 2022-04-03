@@ -1,4 +1,4 @@
-package com.kirtan.baseLibrary.utils.parsedResponseForList
+package com.kirtan.baseLibrary.listHelper.parsedResponseForList
 
 data class ListParsedResponse<ModelType>(
     val isSuccess: Boolean,

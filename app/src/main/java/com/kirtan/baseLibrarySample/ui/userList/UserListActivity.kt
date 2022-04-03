@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.textview.MaterialTextView
 import com.kirtan.baseLibrary.base.activity.apiList.BaseApiListActivity
-import com.kirtan.baseLibrary.utils.parsedResponseForList.ListParsedResponse
+import com.kirtan.baseLibrary.listHelper.parsedResponseForList.ListParsedResponse
 import com.kirtan.baseLibrarySample.R
 import com.kirtan.baseLibrarySample.apis.UsersApi
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User

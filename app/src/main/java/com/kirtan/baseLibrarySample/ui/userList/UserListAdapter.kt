@@ -1,7 +1,7 @@
 package com.kirtan.baseLibrarySample.ui.userList
 
 import com.bumptech.glide.Glide
-import com.kirtan.baseLibrary.base.BaseAdapter
+import com.kirtan.baseLibrary.listHelper.BaseAdapter
 import com.kirtan.baseLibrarySample.R
 import com.kirtan.baseLibrarySample.apis.responseModels.userListResponse.User
 import com.kirtan.baseLibrarySample.databinding.ItemHomeListBinding

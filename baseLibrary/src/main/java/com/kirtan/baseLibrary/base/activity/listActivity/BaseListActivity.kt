@@ -6,11 +6,11 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kirtan.baseLibrary.R
-import com.kirtan.baseLibrary.base.ListScreen
 import com.kirtan.baseLibrary.base.activity.BaseActivity
-import com.kirtan.baseLibrary.dataHolder.BaseArrayList
-import com.kirtan.baseLibrary.dataHolder.BaseObject
-import com.kirtan.baseLibrary.dataHolder.Operation
+import com.kirtan.baseLibrary.listHelper.ListScreen
+import com.kirtan.baseLibrary.listHelper.dataHolder.BaseArrayList
+import com.kirtan.baseLibrary.listHelper.dataHolder.BaseObject
+import com.kirtan.baseLibrary.listHelper.dataHolder.Operation
 import com.kirtan.baseLibrary.utils.gone
 import com.kirtan.baseLibrary.utils.show
 import com.kirtan.baseLibrary.utils.toast
