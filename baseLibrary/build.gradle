@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'maven-publish'
 }
 
 android {
@@ -44,4 +45,18 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.jakewharton.timber:timber:5.0.1'
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.github.kirtanparmar'
+                artifactId = 'android-base-lib'
+                version = '0.1.0'
+            }
+        }
+    }
 }
