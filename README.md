@@ -1,20 +1,28 @@
-# AndroidBaseLibraryProject
 
-You can use the Library for faster development. In order to use this library, you must have advance
-knowledge in android and kotlin. By extending the provided base classes, you can avoid boiler plate.
-Also you can modify the code as your convince.
+# AndroidBaseLibrary 
 
-Thank you.
+This dependency contains the base Activity classes for smoother Android development.
 
-implement into your project.
-Add it in your root build.gradle at the end of repositories:
-    allprojects {
-        repositories { 
-            maven { url 'https://jitpack.io' }
-        }
-    }
+* BaseApp (Extends Application)
 
-Add the dependency:
-    dependencies { 
-        implementation 'com.github.kirtanparmar:AndroidBaseLibraryProject:0.1.1' 
-    }
+* BaseActivity (Extends AppCompatActivity)
+
+* BaseAPIActivity (Extends BaseActivity)
+
+* BaseListActivity (Extends BaseActivity)
+
+* BaseApiListActivity (Extends BaseListActivity)
+
+* BaseApiListPagingListActivity (Extends BaseListActivity)
+## Implement
+
+Use Gradle:
+```bash
+repositories { 
+    maven { url 'https://jitpack.io' } 
+}
+
+dependencies { 
+    implementation 'com.github.kirtanparmar:AndroidBaseLibraryProject:0.1.1' 
+}
+```
